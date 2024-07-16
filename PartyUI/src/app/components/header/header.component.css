@@ -1,0 +1,61 @@
+header {
+    background-image: url('https://static.vecteezy.com/system/resources/thumbnails/036/135/743/small_2x/ai-generated-colored-water-drops-on-abstract-background-water-drops-on-colorful-background-colored-wallpaper-ultra-hd-colorful-wallpaper-background-with-colored-bubbles-photo.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+  }
+  
+  .top-bar {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+  }
+  
+  .top-bar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .contact-info span {
+    margin-right: 20px;
+  }
+  
+  .social-links a {
+    color: white;
+    margin-left: 10px;
+    text-decoration: none;
+  }
+  
+  .social-links a:hover {
+    color: yellow;
+  }
+  
+  .header-content {
+    max-width: 600px;
+    margin: 60px auto 0;
+    padding: 20px;
+  }
+  
+  .highlight {
+    color: yellow;
+  }
+  
+  .btn-primary {
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  
+  .btn-primary:hover {
+    background-color: darkblue;
+  }
+  

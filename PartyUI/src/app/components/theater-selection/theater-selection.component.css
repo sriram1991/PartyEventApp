@@ -1,0 +1,55 @@
+.theater-selection {
+    background-color: #f7f7f7;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  
+  .theaters {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  
+  .theater-card {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
+    width: 250px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .btn-primary {
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  
+  .btn-primary:hover {
+    background-color: darkblue;
+  }
+  
+  .actions {
+    margin-top: 20px;
+  }
+  
+  .btn-secondary {
+    background-color: grey;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 10px;
+  }
+  
+  .btn-secondary:hover {
+    background-color: darkgrey;
+  }
+  

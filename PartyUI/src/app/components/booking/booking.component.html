@@ -1,0 +1,13 @@
+<section class="booking-section">
+    <div class="container">
+      <div class="theater-options">
+        <div class="theater" *ngFor="let theater of theaters">
+          <h3>{{theater.name}}</h3>
+          <p>₹{{theater.price}} for 4 or less people (₹{{theater.extraPrice}} per extra person)</p>
+          <p>{{theater.slotsAvailable}} slots available on {{theater.date}}</p>
+          <button (click)="bookNow(theater)">Book Now</button>
+          <p>{{theater.peopleRange}}</p>
+        </div>
+      </div>
+    </div>
+  </section>

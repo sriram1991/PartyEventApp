@@ -1,0 +1,31 @@
+.additional-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  
+  .info-content {
+    max-width: 600px;
+  }
+  
+  .info-image img {
+    max-width: 100%;
+    border-radius: 10px;
+  }
+  
+  .btn-primary {
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  
+  .btn-primary:hover {
+    background-color: darkblue;
+  }
+  
