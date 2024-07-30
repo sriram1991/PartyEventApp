@@ -6,6 +6,7 @@ bcrypt==3.2.0
 blinker==1.4
 Brlapi==0.8.3
 certifi==2020.6.20
+cffi==1.16.0
 chardet==4.0.0
 click==8.0.3
 colorama==0.4.4
@@ -14,13 +15,16 @@ cryptography==3.4.8
 cupshelpers==1.0
 dbus-python==1.2.18
 defer==1.0.6
+distlib==0.3.4
 distro==1.7.0
 distro-info==1.1+ubuntu0.2
 dnspython==2.1.0
 duplicity==0.8.21
+ecdsa==0.19.0
 exceptiongroup==1.2.0
 fastapi==0.110.0
 fasteners==0.14.1
+filelock==3.6.0
 fuse-python==1.0.2
 future==0.18.2
 gpg==1.16.0
@@ -30,6 +34,8 @@ httplib2==0.20.2
 idna==3.3
 importlib-metadata==4.6.4
 jeepney==0.7.1
+jose==1.0.0
+jwcrypto==1.5.6
 keyring==23.5.0
 language-selector==0.1
 launchpadlib==1.10.16
@@ -48,12 +54,16 @@ oauthlib==3.2.0
 olefile==0.46
 onboard==1.4.1
 paramiko==2.9.3
+passlib==1.7.4
 pexpect==4.8.0
 Pillow==9.0.1
+platformdirs==2.5.1
 protobuf==3.12.4
 psycopg2-binary==2.9.9
 ptyprocess==0.7.0
+pyasn1==0.6.0
 pycairo==1.20.1
+pycparser==2.22
 pycups==2.0.1
 pydantic==2.6.4
 pydantic_core==2.16.3
@@ -70,6 +80,9 @@ pyRFC3339==1.1
 python-apt==2.4.0+ubuntu3
 python-dateutil==2.8.1
 python-debian==0.1.43+ubuntu1.1
+python-jose==3.3.0
+python-jwt==4.1.0
+python-multipart==0.0.9
 pytz==2022.1
 pyxattr==0.7.2
 pyxdg==0.27
@@ -77,6 +90,7 @@ PyYAML==5.4.1
 reportlab==3.6.8
 requests==2.25.1
 requests-toolbelt==0.9.1
+rsa==4.9
 SecretStorage==3.3.1
 six==1.16.0
 sniffio==1.3.1
@@ -92,6 +106,7 @@ unattended-upgrades==0.1
 urllib3==1.26.5
 usb-creator==0.3.7
 uvicorn==0.29.0
+virtualenv==20.13.0+ds
 wadllib==1.3.6
 xdg==5
 xkit==0.0.0
