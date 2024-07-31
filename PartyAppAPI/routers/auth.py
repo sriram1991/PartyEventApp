@@ -1,7 +1,8 @@
 import sys
+
 sys.path.append("..")
 
-from fastapi import APIRouter, Body, Depends, Request, HTTPException
+from fastapi import APIRouter, Body, Depends, Request, HTTPException, Path
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from starlette import status
 from passlib.context import CryptContext
@@ -101,14 +102,16 @@ def reg_user(db: db_dependency, create_user: CreateUserRequest):
 def authenticate_user(username: str, password: str, db):
     user = db.query(Users).filter(Users.username == username).first()
     if not user:
-        return False
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Please provide a valid username.')
 
     if not bcrypt_context.verify(password, user.password):
-        return False
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Please provide a valid Password.')
     return user
 
 
-@router.post("/token")
+@router.post("/login")
 def login_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: db_dependency):
     user = authenticate_user(form_data.username, form_data.password, db)
     if not user:
@@ -118,32 +121,25 @@ def login_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], 
 
     return {'access_token': token, 'token_type': 'bearer'}
 
-# @router.post("/register1")
-# def register_user(request: Request, obj=Body(), db: SessionLocal = Depends(get_db)):
-#     print("-------------------------0")
-#     print(request)
-#     print("-------------------------1")
-#     print(obj)
-# validation1 = db.query(models.Users).filter(models.Users.username == obj.username).first()
-# validation2 = db.query(models.Users).filter(models.Users.email == obj.newemail).first()
 
-# if obj.password != obj.password2 or validation1 is not None or validation2 is not None:
-#     msg = "Invalid registration request"
-#     return {"request": request, "msg": msg}
+@router.put("/updateUser/{user_id}")
+def update_user(user: get_current_user, db: db_dependency, user_id: int = Path(gt=0)):
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Could not validate user.')
+    db_user = db.query(Users).filter(user.username == user_id).first()
 
-# user_model = models.Users()
-# user_model.username = obj.username
-# user_model.email = obj.email
-# user_model.first_name = obj.firstname
-# user_model.last_name = obj.lastname
-#
-# hash_password = get_password_hash(obj.password)
-# user_model.hashed_password = hash_password
-# user_model.is_active = True
-#
-# db.add(user_model)
-# db.commit()
-#
-# print(user_model.username)
-# msg = "User successfully created"
-# return {"status": status.HTTP_201_CREATED, "msg": msg}
+    db_user.email = user.email
+    db_user.mobile = user.mobile
+    db.add(db_user)
+    db.commit()
+
+
+@router.get("/getUser/{user_id}")
+def get_user(user: get_current_user, db: db_dependency, user_id: int = Path(gt=0)):
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Could not validate user.')
+    db_user = db.query(Users).filter(user.username == user_id).first()
+
+    return db_user
