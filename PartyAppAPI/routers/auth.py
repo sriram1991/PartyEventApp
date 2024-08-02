@@ -1,5 +1,4 @@
 import sys
-
 sys.path.append("..")
 
 from fastapi import APIRouter, Body, Depends, Request, HTTPException, Path
@@ -13,8 +12,8 @@ import jwt
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from PartyApp.database import SessionLocal, engine
-from PartyApp.models import Users, Base
+from database import SessionLocal, engine
+from models import Users, Base
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
@@ -90,8 +89,13 @@ def reg_user(db: db_dependency, create_user: CreateUserRequest):
 
     validate_username = db.query(Users).filter(Users.username == create_user.username).first()
     validate_email = db.query(Users).filter(Users.email == create_user.email).first()
+    validate_mobile = db.query(Users).filter(Users.mobile == create_user.mobile).first()
+    print(create_user.password)
+    print(validate_username)
+    print(validate_email)
+    print(validate_mobile)
 
-    if create_user.password or validate_username is not None or validate_email is not None:
+    if create_user.password and (validate_username is not None or validate_email is not None or validate_mobile is not None):
         raise HTTPException(status_code=status.HTTP_302_FOUND,
                             detail='Username or Email already exist')
 

@@ -1,18 +1,18 @@
 import sys
+
 sys.path.append("..")
 
 from starlette import status
-from PartyApp.models import Location
-
+from models import Location
 
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Path
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from PartyApp.routers.auth import get_current_user
+from routers.auth import get_current_user
 
-from PartyApp.database import engine, SessionLocal
-from PartyApp.models import Base
+from database import engine, SessionLocal
+from models import Base
 
 router = APIRouter(
     prefix="/location",
@@ -27,9 +27,9 @@ class CreateLocation(BaseModel):
     name: str
     description: str
     address: str
-    pincode:int
+    pincode: int
     state: str
-    city:str
+    city: str
 
 
 def get_db():
@@ -44,7 +44,7 @@ db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
-@router.post("/location", status_code=status.HTTP_201_CREATED)
+@router.post("/create", status_code=status.HTTP_201_CREATED)
 def create_location(user: user_dependency, db: db_dependency, location_request: CreateLocation):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
@@ -56,9 +56,32 @@ def create_location(user: user_dependency, db: db_dependency, location_request: 
     db.commit()
 
 
-@router.get("/")
+@router.get("/getAll", status_code=status.HTTP_204_NO_CONTENT)
+async def get_location(user: user_dependency, db: db_dependency):
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Could not validate user.')
+    location = db.query(Location)
+    print(location)
+    if location is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Could not validate user.')
+    return location
 
-@router.put("/location/{location_id}", status_code=status.HTTP_204_NO_CONTENT)
+
+@router.get("/get/{location_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def get_location(user: user_dependency, db: db_dependency, location_id: int = Path(gt=0)):
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Could not validate user.')
+    location = db.query(Location).filter(Location.id == location_id).first()
+    if location is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Could not validate user.')
+    return location
+
+
+@router.put("/update/{location_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def update_location(user: user_dependency, db: db_dependency,
                           location_request: CreateLocation, location_id: int = Path(gt=0)):
     if user is None:
