@@ -47,8 +47,8 @@ class Theatre(Base):
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
 
 
-class PartyEeventType(Base):
-    __tablename__ = 'party_event_type'
+class PartyEevent(Base):
+    __tablename__ = 'party_event'
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
@@ -91,7 +91,7 @@ class Slots(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     slot_time_duration = Column(String)
-    # slot_date = Column(datetime)
+    slot_date = Column(DateTime, default=datetime.utcnow)
     is_active = Column(Boolean)
     theatre = Column(Integer, ForeignKey('theatre.id'))
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
@@ -105,7 +105,7 @@ class BookingEntry(Base):
     theatre = Column(Integer, ForeignKey('theatre.id'))
     location = Column(Integer, ForeignKey('location.id'))
     party_event_selected = Column(Integer, ForeignKey('party_event_type.id'))
-    # date = Column(datetime)
+    date = Column(DateTime, default=datetime.utcnow)
     slot = Column(Integer, ForeignKey('slots.id'))
     no_of_peoples = Column(Integer)
     addons_selected = Column(String)
