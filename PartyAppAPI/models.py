@@ -32,8 +32,8 @@ class Location(Base):
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
 
 
-class Theatre(Base):
-    __tablename__ = 'theatre'
+class Theater(Base):
+    __tablename__ = 'theaters'
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
@@ -47,7 +47,7 @@ class Theatre(Base):
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
 
 
-class PartyEevent(Base):
+class PartyEvent(Base):
     __tablename__ = 'party_event'
 
     id = Column(Integer, primary_key=True, index=True)
@@ -80,7 +80,7 @@ class Gallery(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     location = Column(Integer, ForeignKey("location.id"))
-    theatre = Column(Integer, ForeignKey("theatre.id"))
+    theater = Column(Integer, ForeignKey("theater.id"))
     description = Column(String)
     image_path = Column(String)
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
@@ -104,7 +104,7 @@ class BookingEntry(Base):
     price_total = Column(Integer)
     theatre = Column(Integer, ForeignKey('theatre.id'))
     location = Column(Integer, ForeignKey('location.id'))
-    party_event_selected = Column(Integer, ForeignKey('party_event_type.id'))
+    party_event_selected = Column(Integer, ForeignKey('party_event.id'))
     date = Column(DateTime, default=datetime.utcnow)
     slot = Column(Integer, ForeignKey('slots.id'))
     no_of_peoples = Column(Integer)

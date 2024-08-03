@@ -10,7 +10,7 @@ from starlette import status
 
 from routers.auth import get_current_user
 from database import engine, get_db
-from models import Base, Gallery, PartyEevent
+from models import Base, Gallery, PartyEvent
 
 router = APIRouter(
     prefix="/partyEvent",
@@ -38,8 +38,9 @@ def get_all_party_event(user: user_dependency, db: db_dependency):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user.')
-    eventList = db.query(PartyEevent).all()
+    eventList = db.query(PartyEvent).all()
     print(eventList)
+
     if eventList is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user.')
@@ -52,7 +53,7 @@ def create_party_event(user: user_dependency, db: db_dependency,
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user.')
-    event_model = PartyEevent(**event_request.dict())
+    event_model = PartyEvent(**event_request.dict())
     #in case of foreign key key=user.get('id')
 
     print(str(event_model))
@@ -70,9 +71,32 @@ async def get_slot(user: user_dependency, db: db_dependency, event_id: int = Pat
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user.')
-    event = db.query(PartyEevent).filter(PartyEevent.id == event_id).first()
+    event = db.query(PartyEvent).filter(PartyEvent.id == event_id).first()
 
     if event is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user.')
     return event
+
+
+@router.put("/update/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def update_event(user: user_dependency, db: db_dependency,
+                       event_request: CreatePartyEvent, event_id: int = Path(gt=0)):
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Could not validate user.')
+    event = db.query(PartyEvent).filter(PartyEvent.id == event_id).first()
+
+    if event is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Could not validate user.')
+
+    event.name = event_request.name
+    event.description = event_request.description
+    event.spacial_name = event_request.spacial_name
+    event.spacial_other_name = event_request.spacial_other_name
+    event.price = event_request.price
+    event.image_path = event_request.image_path
+
+    db.add(event)
+    db.commit()
