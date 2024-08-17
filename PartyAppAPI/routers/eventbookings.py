@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import sys
 
 from routers.location import get_all_location
