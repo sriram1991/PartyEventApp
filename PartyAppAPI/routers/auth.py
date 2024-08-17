@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append("..")
 
 from fastapi import APIRouter, Body, Depends, Request, HTTPException, Path
@@ -11,8 +12,9 @@ from jwt import PyJWTError
 import jwt
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+import logging
 
-from database import SessionLocal, engine
+from database import SessionLocal, engine, get_db
 from models import Users, Base
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -38,14 +40,6 @@ class CreateUserRequest(BaseModel):
     role: str
     is_active: bool
     mobile: str
-
-
-def get_db():
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
 
 
 db_dependency = Annotated[Session, Depends(get_db)]
@@ -95,7 +89,8 @@ def reg_user(db: db_dependency, create_user: CreateUserRequest):
     print(validate_email)
     print(validate_mobile)
 
-    if create_user.password and (validate_username is not None or validate_email is not None or validate_mobile is not None):
+    if create_user.password and (
+            validate_username is not None or validate_email is not None or validate_mobile is not None):
         raise HTTPException(status_code=status.HTTP_302_FOUND,
                             detail='Username or Email already exist')
 
