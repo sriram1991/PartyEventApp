@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import models
 from database import engine
-from routers import auth, location, gallery, theaters, slots, addons, partyevent
+from routers import auth, location, gallery, theaters, slots, addons, partyevent, eventbookings
 
 app = FastAPI()
 
@@ -14,3 +14,4 @@ app.include_router(gallery.router)
 app.include_router(slots.router)
 app.include_router(addons.router)
 app.include_router(partyevent.router)
+app.include_router(eventbookings.router)
