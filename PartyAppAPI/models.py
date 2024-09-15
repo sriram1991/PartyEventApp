@@ -101,7 +101,7 @@ class BookingEntry(Base):
     __tablename__ = 'booking_entry'
 
     id = Column(Integer, primary_key=True, index=True)
-    price_total = Column(Integer)
+    total_amount = Column(Integer)
     theater = Column(Integer, ForeignKey('theater.id'))
     location = Column(Integer, ForeignKey('location.id'))
     party_event_selected = Column(Integer, ForeignKey('party_event.id'))
@@ -112,4 +112,7 @@ class BookingEntry(Base):
     booking_name = Column(String(50))
     booking_mobile = Column(Integer)
     booking_email = Column(String(50))
+    advance_amount = Column(Integer)
+    discount_coupon = Column(String(50))
+    referral_code = Column(String(50))
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)

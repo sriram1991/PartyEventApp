@@ -43,8 +43,8 @@ theatre_dependency = Annotated[dict, Depends(get_all_theaters)]
 
 
 @router.get("/uploadFile")
-async def read_upload_image(fileName):
-    file_path = UPLOAD_DIR + fileName #'2018-03-04-16-28-07-031.jpg'
+async def read_upload_image(file_name):
+    file_path = UPLOAD_DIR + file_name #'2018-03-04-16-28-07-031.jpg'
     """
     Read the uploaded images.
     :return: A JSON response with a list of uploaded image filenames

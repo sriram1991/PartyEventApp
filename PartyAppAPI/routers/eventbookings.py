@@ -1,12 +1,11 @@
-from datetime import datetime
 import sys
+sys.path.append("..")
 
 from routers.location import get_all_location
 from routers.partyevent import get_all_party_event
 from routers.slots import get_all_slots
 from routers.theaters import get_all_theaters
-
-sys.path.append("..")
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Path
 from pydantic import BaseModel
@@ -28,13 +27,16 @@ Base.metadata.create_all(bind=engine)
 
 
 class CreateEventBooking(BaseModel):
-    price_total: str
+    total_amount: int
     date: datetime = None
     no_of_peoples: int
     addons_selected: str
     booking_name: str
     booking_mobile: str
     booking_email: str
+    advance_amount: int
+    discount_coupon: str
+    referral_code: str
 
 
 db_dependency = Annotated[Session, Depends(get_db)]
