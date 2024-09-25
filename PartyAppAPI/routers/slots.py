@@ -87,7 +87,6 @@ async def update_slots(user: user_dependency, db: db_dependency,
     slots.slot_time_duration = slots_request.slot_time_duration
     slots.slot_date = slots_request.slot_date
     slots.is_active = slots_request.is_active
-    slots.theatre = slots_request.theatre
 
     db.add(slots)
     db.commit()
