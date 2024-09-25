@@ -9,7 +9,7 @@ from starlette import status
 
 from routers.auth import get_current_user
 from database import engine, get_db
-from models import Base, Slots, AddOns
+from models import Base, AddOns
 
 router = APIRouter(
     prefix="/addon",
@@ -51,13 +51,13 @@ def create_addon(user: user_dependency, db: db_dependency, addon_request: Create
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user.')
-    addon_model = Slots(**addon_request.dict())
+    addon_model = AddOns(**addon_request.dict())
     db.add(addon_model)
     db.commit()
 
 
 @router.get("/getAll")
-def get_slots(user: user_dependency, db: db_dependency):
+def get_addons(user: user_dependency, db: db_dependency):
     return get_all_addons(user, db)
 
 
@@ -75,7 +75,7 @@ async def get_slot(user: user_dependency, db: db_dependency, addon_id: int = Pat
 
 
 @router.put("/update/{addon_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def update_slots(user: user_dependency, db: db_dependency,
+async def update_addons(user: user_dependency, db: db_dependency,
                        addon_request: CreateAddon, addon_id: int = Path(gt=0)):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
