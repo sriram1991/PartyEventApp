@@ -93,7 +93,7 @@ class Slots(Base):
     slot_time_duration = Column(String(15))
     slot_date = Column(DateTime, default=datetime.utcnow)
     is_active = Column(Boolean)
-    theater = Column(Integer, ForeignKey('theater.id'))
+    # theater = Column(Integer, ForeignKey('theater.id'))
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
 
 
