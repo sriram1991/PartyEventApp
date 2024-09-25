@@ -28,7 +28,9 @@ class CreateTheater(BaseModel):
     price: int
     no_of_peoples: int
     extra_cost_each_person: int
+    location: int
     no_of_slots: int
+    slots: int
 
 
 db_dependency = Annotated[Session, Depends(get_db)]
