@@ -27,7 +27,6 @@ class CreateSlots(BaseModel):
     slot_time_duration: str
     slot_date: datetime = None
     is_active: bool
-    theatre: int
 
 
 db_dependency = Annotated[Session, Depends(get_db)]
