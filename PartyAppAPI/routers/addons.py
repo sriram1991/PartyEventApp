@@ -26,7 +26,7 @@ class CreateAddon(BaseModel):
     type: str
     quantity: int
     price: int
-    image_path: int
+    image_path: str
     is_available: bool
 
 
