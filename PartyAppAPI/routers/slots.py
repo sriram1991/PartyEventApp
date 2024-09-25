@@ -31,7 +31,6 @@ class CreateSlots(BaseModel):
 
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
-# theaters_dependency = Annotated[dict, Depends(get_all_location)]
 
 
 def get_all_slots(user: user_dependency, db: db_dependency):
