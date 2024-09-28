@@ -48,11 +48,10 @@ party_dependency = Annotated[dict, Depends(get_all_party_event)]
 
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
-def create_event_booking(user: user_dependency, db: db_dependency,
-                         event_request: CreateEventBooking):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+def create_event_booking(db: db_dependency, event_request: CreateEventBooking):
+    # if user is None:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+    #                         detail='Could not validate user.')
     booking_model = BookingEntry(**event_request.dict())
     #in case of foreign key key=user.get('id')
 

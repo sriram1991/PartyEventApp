@@ -34,10 +34,10 @@ db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
-def get_all_party_event(user: user_dependency, db: db_dependency):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+def get_all_party_event(db: db_dependency):
+    # if user is None:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+    #                         detail='Could not validate user.')
     eventList = db.query(PartyEvent).all()
     print(eventList)
 
@@ -61,22 +61,22 @@ def create_party_event(user: user_dependency, db: db_dependency,
     db.commit()
 
 
-@router.get("/getAll")
-def get_party_event(user: user_dependency, db: db_dependency):
-    return get_all_party_event(user, db)
-
-
 @router.get("/get/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def get_slot(user: user_dependency, db: db_dependency, event_id: int = Path(gt=0)):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+async def get_slot(db: db_dependency, event_id: int = Path(gt=0)):
+    # if user is None:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+    #                         detail='Could not validate user.')
     event = db.query(PartyEvent).filter(PartyEvent.id == event_id).first()
 
     if event is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user.')
     return event
+
+
+@router.get("/getAll")
+def get_party_event(db: db_dependency):
+    return get_all_party_event(db)
 
 
 @router.put("/update/{event_id}", status_code=status.HTTP_204_NO_CONTENT)

@@ -55,11 +55,10 @@ async def read_upload_image(file_name):
 
 
 @router.get("/galleryByLocationByTheatre/{location_id}/{theater_id}")
-def get_gallery_by_location_by_theater(user: user_dependency, db: db_dependency,
-                                       location_id: int = Path(gt=0), theater_id: int = Path(gt=1)):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+def get_gallery_by_location_by_theater(db: db_dependency, location_id: int = Path(gt=0), theater_id: int = Path(gt=1)):
+    # if user is None:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+    #                         detail='Could not validate user.')
     galleryList = (db.query(Gallery).filter(Location.id == location_id).
                    filter(Theater.id == theater_id).all())
 
@@ -69,11 +68,11 @@ def get_gallery_by_location_by_theater(user: user_dependency, db: db_dependency,
                             detail='Could not validate user.')
     return galleryList
 
-
-def get_all_gallery(user: user_dependency, db: db_dependency):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+@router.get("/getAll")
+def get_gallery(db: db_dependency):
+    # if user is None:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+    #                         detail='Could not validate user.')
     galleryList = db.query(Gallery).all()
     print(galleryList)
     if galleryList is None:
@@ -96,11 +95,6 @@ def create_gallery(user: user_dependency, db: db_dependency,
     db.commit()
 
 
-@router.get("/getAll")
-def get_gallery(user: user_dependency, db: db_dependency):
-    return get_all_gallery(user, db)
-
-
 @router.post("/uploadFile")
 async def uploadFile(image: UploadFile = File(...)):
     filename = image.filename
@@ -113,10 +107,10 @@ async def uploadFile(image: UploadFile = File(...)):
 
 
 @router.get("/get/{gallery_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def get_gallery(user: user_dependency, db: db_dependency, gallery_id: int = Path(gt=0)):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+async def get_gallery(db: db_dependency, gallery_id: int = Path(gt=0)):
+    # if user is None:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+    #                         detail='Could not validate user.')
     gallery = db.query(Gallery).filter(Gallery.id == gallery_id).first()
 
     if gallery is None:

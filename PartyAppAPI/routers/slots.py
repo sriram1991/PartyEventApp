@@ -33,10 +33,10 @@ db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
-def get_all_slots(user: user_dependency, db: db_dependency):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+def get_all_slots(db: db_dependency):
+    # if user is None:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+    #                         detail='Could not validate user.')
     slots = db.query(Slots).all()
     print(slots)
     if slots is None:
@@ -57,14 +57,14 @@ def create_location(user: user_dependency, db: db_dependency, slots_request: Cre
 
 @router.get("/getAll")
 def get_slots(user: user_dependency, db: db_dependency):
-    return get_all_slots(user, db)
+    return get_all_slots(db)
 
 
 @router.get("/get/{slot_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def get_slot(user: user_dependency, db: db_dependency, slot_id: int = Path(gt=0)):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+async def get_slot(db: db_dependency, slot_id: int = Path(gt=0)):
+    # if user is None:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+    #                         detail='Could not validate user.')
     slot = db.query(Slots).filter(Slots.id == slot_id).first()
     if slot is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,

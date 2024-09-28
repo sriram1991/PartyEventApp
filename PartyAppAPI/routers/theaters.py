@@ -38,10 +38,10 @@ user_dependency = Annotated[dict, Depends(get_current_user)]
 location_dependency = Annotated[dict, Depends(get_all_location)]
 
 
-def get_all_theaters(user: user_dependency, db: db_dependency):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+def get_all_theaters(db: db_dependency):
+    # if user is None:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+    #                         detail='Could not validate user.')
     theaterList = db.query(Theater).all()
     print(theaterList)
 
@@ -66,15 +66,15 @@ def create_theater(user: user_dependency, db: db_dependency,
 
 
 @router.get("/getAll")
-def get_theaters(user: user_dependency, db: db_dependency):
-    return get_all_theaters(user, db)
+def get_theaters(db: db_dependency):
+    return get_all_theaters(db)
 
 
 @router.get("/get/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def get_theater(user: user_dependency, db: db_dependency, event_id: int = Path(gt=0)):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+async def get_theater(db: db_dependency, event_id: int = Path(gt=0)):
+    # if user is None:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+    #                         detail='Could not validate user.')
     theater = db.query(Theater).filter(Theater.id == event_id).first()
 
     if theater is None:
