@@ -42,7 +42,7 @@ location_dependency = Annotated[dict, Depends(get_all_location)]
 theatre_dependency = Annotated[dict, Depends(get_all_theaters)]
 
 
-@router.get("/uploadFile")
+@router.get("/checkIsFileExist")
 async def read_upload_image(file_name):
     file_path = UPLOAD_DIR + file_name #'2018-03-04-16-28-07-031.jpg'
     """
