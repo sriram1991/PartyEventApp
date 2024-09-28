@@ -60,15 +60,16 @@ def create_location(user: user_dependency, db: db_dependency, location_request: 
 
 
 @router.get("/getAll")
-async def get_all_location(db: db_dependency):
+def get_all_locations(db: db_dependency):
     return get_all_location(db)
 
 
 @router.get("/get/{location_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def get_location(db: db_dependency, location_id: int = Path(gt=0)):
+def get_location(db: db_dependency, location_id: int = Path(gt=0)):
     # if user is None:
     #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
     #                         detail='Could not validate user.')
+    print(location_id)
     location = db.query(Location).filter(Location.id == location_id).first()
     if location is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
