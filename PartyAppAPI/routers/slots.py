@@ -56,7 +56,7 @@ def create_location(user: user_dependency, db: db_dependency, slots_request: Cre
 
 
 @router.get("/getAll")
-def get_slots(user: user_dependency, db: db_dependency):
+def get_slots(db: db_dependency):
     return get_all_slots(db)
 
 

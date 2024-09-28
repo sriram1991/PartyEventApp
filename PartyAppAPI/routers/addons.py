@@ -34,10 +34,10 @@ db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
-def get_all_addons(user: user_dependency, db: db_dependency):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+def get_all_addons(db: db_dependency):
+    # if user is None:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+    #                         detail='Could not validate user.')
     addonList = db.query(AddOns).all()
     print(addonList)
     if addonList is None:
@@ -57,15 +57,15 @@ def create_addon(user: user_dependency, db: db_dependency, addon_request: Create
 
 
 @router.get("/getAll")
-def get_addons(user: user_dependency, db: db_dependency):
-    return get_all_addons(user, db)
+def get_addons(db: db_dependency):
+    return get_all_addons(db)
 
 
 @router.get("/get/{addon_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def get_addons(user: user_dependency, db: db_dependency, addon_id: int = Path(gt=0)):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+async def get_addons(db: db_dependency, addon_id: int = Path(gt=0)):
+    # if user is None:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+    #                         detail='Could not validate user.')
     addon = db.query(AddOns).filter(AddOns.id == addon_id).first()
 
     if addon is None:
