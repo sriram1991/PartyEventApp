@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from starlette import status
 
 from routers.auth import get_current_user
-from routers.location import get_all_location
+from routers.location import getAllLocation
 from database import engine, SessionLocal, get_db
 from models import Base, Gallery, Slots
 

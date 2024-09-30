@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from starlette import status
 
 from routers.auth import get_current_user
-from routers.location import get_all_location
+from routers.location import getAllLocation
 from database import engine, SessionLocal, get_db
 from models import Base, Gallery, Theater
 
@@ -35,7 +35,7 @@ class CreateTheater(BaseModel):
 
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
-location_dependency = Annotated[dict, Depends(get_all_location)]
+location_dependency = Annotated[dict, Depends(getAllLocation)]
 
 
 def get_all_theaters(db: db_dependency):
@@ -76,7 +76,7 @@ async def get_theater(db: db_dependency, event_id: int = Path(gt=0)):
     #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
     #                         detail='Could not validate user.')
     theater = db.query(Theater).filter(Theater.id == event_id).first()
-
+    print(theater)
     if theater is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user.')

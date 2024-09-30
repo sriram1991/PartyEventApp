@@ -15,7 +15,7 @@ from starlette import status
 
 from routers.auth import get_current_user
 from routers.theaters import get_all_theaters
-from routers.location import get_all_location
+from routers.location import getAllLocation
 from database import engine, get_db
 from models import Base, Gallery, Theater, Location
 
@@ -38,7 +38,7 @@ class CreateGallery(BaseModel):
 
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
-location_dependency = Annotated[dict, Depends(get_all_location)]
+location_dependency = Annotated[dict, Depends(getAllLocation)]
 theatre_dependency = Annotated[dict, Depends(get_all_theaters)]
 
 
@@ -112,7 +112,7 @@ async def get_gallery(db: db_dependency, gallery_id: int = Path(gt=0)):
     #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
     #                         detail='Could not validate user.')
     gallery = db.query(Gallery).filter(Gallery.id == gallery_id).first()
-
+    print(gallery)
     if gallery is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user.')

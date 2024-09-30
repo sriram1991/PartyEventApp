@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 
-from routers.location import get_all_location
+from routers.location import getAllLocation
 from routers.partyevent import get_all_party_event
 from routers.slots import get_all_slots
 from routers.theaters import get_all_theaters
@@ -42,7 +42,7 @@ class CreateEventBooking(BaseModel):
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 theaters_dependency = Annotated[dict, Depends(get_all_theaters)]
-location_dependency = Annotated[dict, Depends(get_all_location)]
+location_dependency = Annotated[dict, Depends(getAllLocation)]
 slots_dependency = Annotated[dict, Depends(get_all_slots)]
 party_dependency = Annotated[dict, Depends(get_all_party_event)]
 
@@ -55,7 +55,7 @@ def create_event_booking(db: db_dependency, event_request: CreateEventBooking):
     booking_model = BookingEntry(**event_request.dict())
     #in case of foreign key key=user.get('id')
 
-    print(str(booking_model))
+    print(booking_model)
     db.add(booking_model)
     db.commit()
 
@@ -84,7 +84,7 @@ async def get_booking_by_id(user: user_dependency, db: db_dependency, booking_id
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user.')
     bookings = db.query(BookingEntry).filter(BookingEntry.id == booking_id).first()
-
+    print(bookings)
     if bookings is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail='Could not validate user.')

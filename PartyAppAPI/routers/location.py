@@ -1,4 +1,7 @@
+import json.decoder
 import sys
+import models
+
 sys.path.append("..")
 
 from starlette import status
@@ -35,7 +38,7 @@ db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
-def get_all_location(db: db_dependency,):
+def getAllLocation(db: db_dependency):
     # if user is None:
     #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
     #                         detail='Could not validate user.')
@@ -61,7 +64,7 @@ def create_location(user: user_dependency, db: db_dependency, location_request: 
 
 @router.get("/getAll")
 def get_all_locations(db: db_dependency):
-    return get_all_location(db)
+    return getAllLocation(db)
 
 
 @router.get("/get/{location_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -69,8 +72,13 @@ def get_location(db: db_dependency, location_id: int = Path(gt=0)):
     # if user is None:
     #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
     #                         detail='Could not validate user.')
-    print(location_id)
+    # session = Session()
+    # location = session.query(Location).filter(getattr(Location, id) == location_id).first()
+    # location = db.query(Location).filter_by(id = 1)
+    # print(id)
+    # print(location_id)
     location = db.query(Location).filter(Location.id == location_id).first()
+    print(location)
     if location is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user.')

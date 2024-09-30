@@ -67,7 +67,7 @@ async def get_slot(db: db_dependency, event_id: int = Path(gt=0)):
     #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
     #                         detail='Could not validate user.')
     event = db.query(PartyEvent).filter(PartyEvent.id == event_id).first()
-
+    print(event)
     if event is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user.')
