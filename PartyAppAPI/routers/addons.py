@@ -78,7 +78,7 @@ async def get_addons(db: db_dependency, addon_id: int = Path(gt=0)):
         addon = db.query(AddOns).filter(AddOns.id == addon_id).first()
         logger.info(f"addon- {addon}")
         if addon is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                 detail='Could not validate user.')
         return addon
     except Exception as e:
