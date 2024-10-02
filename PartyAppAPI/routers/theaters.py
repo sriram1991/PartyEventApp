@@ -12,6 +12,7 @@ from routers.auth import get_current_user
 from routers.location import getAllLocation
 from database import engine, SessionLocal, get_db
 from models import Base, Gallery, Theater
+from logger import logger
 
 router = APIRouter(
     prefix="/theater",
@@ -39,16 +40,19 @@ location_dependency = Annotated[dict, Depends(getAllLocation)]
 
 
 def get_all_theaters(db: db_dependency):
-    # if user is None:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-    #                         detail='Could not validate user.')
-    theaterList = db.query(Theater).all()
-    print(theaterList)
+    try:
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        theaterList = db.query(Theater).all()
+        print(theaterList)
 
-    if theaterList is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
-    return theaterList
+        if theaterList is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Could not validate user.')
+        return theaterList
+    except Exception as e:
+        logger.error("error in fetch All Theaters ", exc_info=e)
 
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
@@ -71,17 +75,19 @@ def get_theaters(db: db_dependency):
 
 
 @router.get("/get/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def get_theater(db: db_dependency, event_id: int = Path(gt=0)):
-    # if user is None:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-    #                         detail='Could not validate user.')
-    theater = db.query(Theater).filter(Theater.id == event_id).first()
-    print(theater)
-    if theater is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
-    return theater
-
+def get_theater(db: db_dependency, event_id: int = Path(gt=0)):
+    try:
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        theater = db.query(Theater).filter(Theater.id == event_id).first()
+        print(theater)
+        if theater is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Could not validate user.')
+        return theater
+    except Exception as e:
+        logger.error("error in fetch All Theaters ", exc_info=e)
 
 @router.put("/update/{theater_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def update_theater(user: user_dependency, db: db_dependency,

@@ -11,6 +11,7 @@ from starlette import status
 from routers.auth import get_current_user
 from database import engine, get_db
 from models import Base, Gallery, PartyEvent
+from logger import logger
 
 router = APIRouter(
     prefix="/partyEvent",
@@ -35,44 +36,51 @@ user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
 def get_all_party_event(db: db_dependency):
-    # if user is None:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-    #                         detail='Could not validate user.')
-    eventList = db.query(PartyEvent).all()
-    print(eventList)
+    try:
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        eventList = db.query(PartyEvent).all()
+        logger.info(f" eventList - {eventList}")
 
-    if eventList is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
-    return eventList
-
+        if eventList is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Could not validate user.')
+        return eventList
+    except Exception as e:
+        logger.error("error in fetch All PartyEvents ", exc_info=e)
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 def create_party_event(user: user_dependency, db: db_dependency,
                        event_request: CreatePartyEvent):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
-    event_model = PartyEvent(**event_request.dict())
-    #in case of foreign key key=user.get('id')
+    try:
+        if user is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Could not validate user.')
+        event_model = PartyEvent(**event_request.dict())
+        #in case of foreign key key=user.get('id')
 
-    print(str(event_model))
-    db.add(event_model)
-    db.commit()
-
+        logger.info(f"event_model - {event_model}")
+        db.add(event_model)
+        db.commit()
+    except Exception as e:
+        logger.error("error in creating party event ", exc_info=e)
 
 @router.get("/get/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def get_slot(db: db_dependency, event_id: int = Path(gt=0)):
-    # if user is None:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-    #                         detail='Could not validate user.')
-    event = db.query(PartyEvent).filter(PartyEvent.id == event_id).first()
-    print(event)
-    if event is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
-    return event
+    try:
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        event = db.query(PartyEvent).filter(PartyEvent.id == event_id).first()
+        logger.info(f"event - {event}")
 
+        if event is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Could not validate user.')
+        return event
+    except Exception as e:
+        logger.error(f"error in fetching event of {event_id} eventid ", exc_info=e)
 
 @router.get("/getAll")
 def get_party_event(db: db_dependency):
@@ -82,21 +90,24 @@ def get_party_event(db: db_dependency):
 @router.put("/update/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def update_event(user: user_dependency, db: db_dependency,
                        event_request: CreatePartyEvent, event_id: int = Path(gt=0)):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
-    event = db.query(PartyEvent).filter(PartyEvent.id == event_id).first()
+    try:
+        if user is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Could not validate user.')
+        event = db.query(PartyEvent).filter(PartyEvent.id == event_id).first()
 
-    if event is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+        if event is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Could not validate user.')
 
-    event.name = event_request.name
-    event.description = event_request.description
-    event.spacial_name = event_request.spacial_name
-    event.spacial_other_name = event_request.spacial_other_name
-    event.price = event_request.price
-    event.image_path = event_request.image_path
+        event.name = event_request.name
+        event.description = event_request.description
+        event.spacial_name = event_request.spacial_name
+        event.spacial_other_name = event_request.spacial_other_name
+        event.price = event_request.price
+        event.image_path = event_request.image_path
 
-    db.add(event)
-    db.commit()
+        db.add(event)
+        db.commit()
+    except Exception as e:
+        logger.error(f"error in updating event {event_id} in DB ", exc_info=e)

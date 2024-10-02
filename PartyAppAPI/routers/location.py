@@ -1,5 +1,7 @@
 import json.decoder
 import sys
+from linecache import cache
+
 import models
 
 sys.path.append("..")
@@ -15,6 +17,7 @@ from routers.auth import get_current_user
 
 from database import engine, SessionLocal, get_db
 from models import Base
+from logger import logger
 
 router = APIRouter(
     prefix="/location",
@@ -39,16 +42,18 @@ user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
 def getAllLocation(db: db_dependency):
-    # if user is None:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-    #                         detail='Could not validate user.')
-    location = db.query(Location).all()
-    print(location)
-    if location is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
-    return location
-
+    try:
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        location = db.query(Location).all()
+        print(location)
+        if location is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Could not validate user.')
+        return location
+    except Exception as e:
+        logger.error("error in fetch All location", exc_info=e)
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 def create_location(user: user_dependency, db: db_dependency, location_request: CreateLocation):
@@ -69,21 +74,23 @@ def get_all_locations(db: db_dependency):
 
 @router.get("/get/{location_id}", status_code=status.HTTP_204_NO_CONTENT)
 def get_location(db: db_dependency, location_id: int = Path(gt=0)):
-    # if user is None:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-    #                         detail='Could not validate user.')
-    # session = Session()
-    # location = session.query(Location).filter(getattr(Location, id) == location_id).first()
-    # location = db.query(Location).filter_by(id = 1)
-    # print(id)
-    # print(location_id)
-    location = db.query(Location).filter(Location.id == location_id).first()
-    print(location)
-    if location is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
-    return location
-
+    try:
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        # session = Session()
+        # location = session.query(Location).filter(getattr(Location, id) == location_id).first()
+        # location = db.query(Location).filter_by(id = 1)
+        # print(id)
+        # print(location_id)
+        location = db.query(Location).filter(Location.id == location_id).first()
+        print(location)
+        if location is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Could not validate user.')
+        return location
+    except Exception as e:
+        logger.error("error in fetch location", exc_info=e)
 
 @router.put("/update/{location_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def update_location(user: user_dependency, db: db_dependency,

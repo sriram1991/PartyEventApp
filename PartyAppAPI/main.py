@@ -2,8 +2,10 @@ from fastapi import FastAPI
 import models
 from database import engine
 from routers import auth, location, gallery, theaters, slots, addons, partyevent, eventbookings
+from logger import logger
 
 app = FastAPI()
+logger.debug('Main class of API started.....')
 
 models.Base.metadata.create_all(bind=engine)
 
