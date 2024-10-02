@@ -45,7 +45,7 @@ def get_all_theaters(db: db_dependency):
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
         theaterList = db.query(Theater).all()
-        print(theaterList)
+        logger.info(theaterList)
 
         if theaterList is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
@@ -64,7 +64,7 @@ def create_theater(user: user_dependency, db: db_dependency,
     theater_model = Theater(**theater_request.dict())
     #in case of foreign key key=user.get('id')
 
-    print(str(theater_model))
+    logger.info(str(theater_model))
     db.add(theater_model)
     db.commit()
 
@@ -81,7 +81,7 @@ def get_theater(db: db_dependency, event_id: int = Path(gt=0)):
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
         theater = db.query(Theater).filter(Theater.id == event_id).first()
-        print(theater)
+        logger.info(theater)
         if theater is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                 detail='Could not validate user.')

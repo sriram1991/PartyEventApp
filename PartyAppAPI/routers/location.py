@@ -47,7 +47,7 @@ def getAllLocation(db: db_dependency):
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
         location = db.query(Location).all()
-        print(location)
+        logger.info(location)
         if location is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                 detail='Could not validate user.')
@@ -81,10 +81,10 @@ def get_location(db: db_dependency, location_id: int = Path(gt=0)):
         # session = Session()
         # location = session.query(Location).filter(getattr(Location, id) == location_id).first()
         # location = db.query(Location).filter_by(id = 1)
-        # print(id)
-        # print(location_id)
+        # logger.info(id)
+        # logger.info(location_id)
         location = db.query(Location).filter(Location.id == location_id).first()
-        print(location)
+        logger.info(location)
         if location is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                 detail='Could not validate user.')
