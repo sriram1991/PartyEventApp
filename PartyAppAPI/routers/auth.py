@@ -88,10 +88,10 @@ def reg_user(db: db_dependency, create_user: CreateUserRequest):
         validate_username = db.query(Users).filter(Users.username == create_user.username).first()
         validate_email = db.query(Users).filter(Users.email == create_user.email).first()
         validate_mobile = db.query(Users).filter(Users.mobile == create_user.mobile).first()
-        print(create_user.password)
-        print(validate_username)
-        print(validate_email)
-        print(validate_mobile)
+        logger.info(create_user.password)
+        logger.info(validate_username)
+        logger.info(validate_email)
+        logger.info(validate_mobile)
 
         if create_user.password and (
                 validate_username is not None or validate_email is not None or validate_mobile is not None):
