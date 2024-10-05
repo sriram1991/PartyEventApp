@@ -48,8 +48,8 @@ def get_all_theaters(db: db_dependency):
         logger.info(theaterList)
 
         if theaterList is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            return logger.error("No Theater's found ")
+
         return theaterList
     except Exception as e:
         logger.error("error in fetch All Theaters ", exc_info=e)
@@ -64,7 +64,7 @@ def create_theater(user: user_dependency, db: db_dependency,
     theater_model = Theater(**theater_request.dict())
     #in case of foreign key key=user.get('id')
 
-    logger.info(str(theater_model))
+    logger.info(theater_model)
     db.add(theater_model)
     db.commit()
 
@@ -74,17 +74,16 @@ def get_theaters(db: db_dependency):
     return get_all_theaters(db)
 
 
-@router.get("/get/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
-def get_theater(db: db_dependency, event_id: int = Path(gt=0)):
+@router.get("/get/{theater_id}", status_code=status.HTTP_204_NO_CONTENT)
+def get_theater(db: db_dependency, theater_id: int = Path(gt=0)):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
-        theater = db.query(Theater).filter(Theater.id == event_id).first()
+        theater = db.query(Theater).filter(Theater.id == theater_id).first()
         logger.info(theater)
         if theater is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            return logger.error(f"Selected id is invalid data or no match found in DB for {theater_id}")
         return theater
     except Exception as e:
         logger.error("error in fetch All Theaters ", exc_info=e)
@@ -98,8 +97,7 @@ async def update_theater(user: user_dependency, db: db_dependency,
     theater = db.query(Theater).filter(Theater.id == theater_id).first()
 
     if theater is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+        return logger.error(f"Selected id is invalid data or no match found in DB for {theater_id}")
 
     theater.name = theater_request.name
     theater.description = theater_request.description

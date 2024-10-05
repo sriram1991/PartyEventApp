@@ -46,8 +46,8 @@ def get_all_addons(db: db_dependency):
         logger.info(f"addonList - {addonList}")
 
         if addonList is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            return logger.error(f"No data found in AddOn.")
+
         return addonList
     except Exception as e:
         logger.error("error in fetch All AddOns ", exc_info=e)
@@ -78,8 +78,8 @@ async def get_addons(db: db_dependency, addon_id: int = Path(gt=0)):
         addon = db.query(AddOns).filter(AddOns.id == addon_id).first()
         logger.info(f"addon- {addon}")
         if addon is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail='Could not validate user.')
+            return logger.error(f"Selected addon_id is invalid data or no match found in DB for {addon_id}")
+
         return addon
     except Exception as e:
         logger.error(f"error in fetch addon {addon_id} - ", exc_info=e)
@@ -93,8 +93,7 @@ async def update_addons(user: user_dependency, db: db_dependency,
                                 detail='Could not validate user.')
         addon = db.query(AddOns).filter(AddOns.id == addon_id).first()
         if addon is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            return logger.error(f"Selected Gallery_id is invalid data or no match found in DB for {addon_id} to update")
 
         addon.name = addon_request.name
         addon.description = addon_request.description

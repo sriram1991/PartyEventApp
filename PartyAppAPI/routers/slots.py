@@ -43,8 +43,8 @@ def get_all_slots(db: db_dependency):
         slots = db.query(Slots).all()
         logger.info(slots)
         if slots is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            return logger.error(f"No data found in Slots")
+
         return slots
     except Exception as e:
         logger.error(f"error in getting AllSlots - ", exc_info=e)
@@ -74,8 +74,7 @@ async def get_slot(db: db_dependency, slot_id: int = Path(gt=0)):
         #                         detail='Could not validate user.')
         slot = db.query(Slots).filter(Slots.id == slot_id).first()
         if slot is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            return logger.error(f"Selected slots_id is invalid data or no match found in DB for {slot_id}")
         return slot
     except Exception as e:
         logger.error(f"error in getting slot id {slot_id} - ", exc_info=e)
@@ -89,8 +88,7 @@ async def update_slots(user: user_dependency, db: db_dependency,
                                 detail='Could not validate user.')
         slots = db.query(Slots).filter(Slots.id == slot_id).first()
         if slots is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            return logger.error(f"Selected slots_id is invalid data or no match found in DB for {slot_id} to update")
 
         slots.slot_time_duration = slots_request.slot_time_duration
         slots.slot_date = slots_request.slot_date

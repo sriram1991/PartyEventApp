@@ -1,16 +1,20 @@
 import os
 import sys
+from pydoc import describe
 
 from starlette.responses import JSONResponse
 
+import models
 from logger import logger
 from utils.constants import UPLOAD_DIR
 
 sys.path.append("..")
 
-from fastapi import APIRouter, Depends, HTTPException, Path, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, Path, UploadFile, File, Form, Body
+from fastapi.encoders import jsonable_encoder
+
 from pydantic import BaseModel
-from typing import Annotated
+from typing import Annotated, Optional
 from sqlalchemy.orm import Session
 from starlette import status
 
@@ -43,33 +47,68 @@ location_dependency = Annotated[dict, Depends(getAllLocation)]
 theatre_dependency = Annotated[dict, Depends(get_all_theaters)]
 
 
-# @router.get("/checkIsFileExist")
-async def read_upload_image(file_name):
+@router.post("/createGallery", status_code=status.HTTP_201_CREATED)
+async def saveDataToDB(db: Session = Depends(get_db), name :str = Form(), location: int = Form(),
+                       theater: int = Form(), description: str = Form(), image: UploadFile = File(...)):
     try:
-        file_path = UPLOAD_DIR + file_name #'2018-03-04-16-28-07-031.jpg'
-        """
-        Read the uploaded images.
-        :return: A JSON response with a list of uploaded image filenames
-        """
-        # Get a list of uploaded image filenames
-        filenames = os.listdir(file_path)
-        return JSONResponse(content={"filenames": filenames}, media_type="application/json")
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        filename = image.filename
+        logger.info(filename)
+        image_path = os.path.join(UPLOAD_DIR, filename)
+        with open(image_path, "wb") as f:
+            f.write(image.file.read())
+
+        logger.info(name)
+        logger.info(location)
+        logger.info(theater)
+        logger.info(description)
+        logger.info(image_path)
+
+        gallery = models.Gallery(
+            name=name,
+            location=location,
+            theater=theater,
+            description=description,
+            image_path=image_path
+        )
+
+        db.add(gallery)
+        db.commit()
+
+        return "success"
     except Exception as e:
         logger.error("error in Uploading Image ", exc_info=e)
 
+
+# # @router.get("/checkIsFileExist")
+# async def read_upload_image(file_name):
+#     try:
+#         file_path = UPLOAD_DIR + file_name #'2018-03-04-16-28-07-031.jpg'
+#         """
+#         Read the uploaded images.
+#         :return: A JSON response with a list of uploaded image filenames
+#         """
+#         # Get a list of uploaded image filenames
+#         filenames = os.listdir(file_path)
+#         return JSONResponse(content={"filenames": filenames}, media_type="application/json")
+#     except Exception as e:
+#         logger.error("error in Uploading Image ", exc_info=e)
+#
 @router.get("/galleryByLocationByTheatre/{location_id}/{theater_id}")
 def get_gallery_by_location_by_theater(db: db_dependency, location_id: int = Path(gt=0), theater_id: int = Path(gt=1)):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
-        galleryList = (db.query(Gallery).filter(Location.id == location_id).
-                       filter(Theater.id == theater_id).all())
+        galleryList = (db.query(Gallery).filter(Gallery.location == location_id,
+            Gallery.theater == theater_id).all())
+
         logger.info(f"galleryList by Location: {location_id} - Theater: {theater_id} - list:  {galleryList}")
 
         if galleryList is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            return logger.error(f"Selected id is invalid or no match found in DB for Theater Id: {theater_id} and Location Id: {location_id}")
         return galleryList
     except Exception as e:
         logger.error("error in fetch Gallery ", exc_info=e)
@@ -84,42 +123,26 @@ def get_gallery(db: db_dependency):
         logger.info(f"galleryList -- {galleryList}")
 
         if galleryList is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            return logger.error("No Data found in Gallery")
 
         return galleryList
     except Exception as e:
         logger.error("error in fetch All Gallery Images ", exc_info=e)
 
-@router.post("/create", status_code=status.HTTP_201_CREATED)
-def create_gallery(user: user_dependency, db: db_dependency,
-                    location: location_dependency, gallery_request: CreateGallery):
-    try:
-        if user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
-        gallery_model = Gallery(**gallery_request.dict())
-        #in case of foreign key key=user.get('id')
 
-        print(str(gallery_model))
-        db.add(gallery_model)
-        db.commit()
-    except Exception as e:
-        logger.error("error while saving Image in DB ", exc_info=e)
-
-@router.post("/uploadFile")
-async def uploadFile(image: UploadFile = File(...)):
-    try:
-        filename = image.filename
-        filepath = os.path.join(UPLOAD_DIR, filename)
-        with open(filepath, "wb") as f:
-            f.write(image.file.read())
-
-        # Return a JSON response
-        return JSONResponse(content={"filename": filename}, media_type="application/json")
-    except Exception as e:
-        logger.error("error Uploading a Image ", exc_info=e)
-
+# @router.post("/uploadFile")
+# async def uploadFile(image: UploadFile = File(...)):
+#     try:
+#         filename = image.filename
+#         filepath = os.path.join(UPLOAD_DIR, filename)
+#         with open(filepath, "wb") as f:
+#             f.write(image.file.read())
+#
+#         # Return a JSON response
+#         return JSONResponse(content={"filename": filename}, media_type="application/json")
+#     except Exception as e:
+#         logger.error("error Uploading a Image ", exc_info=e)
+#
 @router.get("/get/{gallery_id}", status_code=status.HTTP_204_NO_CONTENT)
 def get_gallery(db: db_dependency, gallery_id: int = Path(gt=0)):
     try:
@@ -127,7 +150,7 @@ def get_gallery(db: db_dependency, gallery_id: int = Path(gt=0)):
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
         gallery = db.query(Gallery).filter(Gallery.id == gallery_id).first()
-        print(gallery)
+        logger.info(gallery)
         if gallery is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                 detail='Could not validate user.')
@@ -136,25 +159,26 @@ def get_gallery(db: db_dependency, gallery_id: int = Path(gt=0)):
         logger.error("error in fetch Gallery ", exc_info=e)
 
 @router.put("/update/{gallery_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def update_gallery(user: user_dependency, db: db_dependency,
-                         gallery_request: CreateGallery, gallery_id: int = Path(gt=0)):
+async def update_gallery(db: db_dependency, name: Optional[str] = None, location: Optional[int] = None,
+                        theater: Optional[int] = None,description: Optional[str] = None ,gallery_id: int = Path(gt=0)):
     try:
-        if user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
         gallery = db.query(Gallery).filter(Gallery.id == gallery_id).first()
-
+        logger.info(gallery.name)
         if gallery is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            return logger.error(f"Selected Gallery_id is invalid data or no match found in DB for {gallery_id}")
 
-        gallery.name = gallery_request.name
-        gallery.location = gallery_request.location
-        gallery.theatre = gallery_request.theatre
-        gallery.description = gallery_request.description
-        gallery.image_path = gallery_request.image_path
-
+        if name:
+            gallery.name = name
+        if location:
+            gallery.location = location
+        if theater:
+            gallery.theater = theater
+        if description:
+            gallery.description = description
         db.add(gallery)
         db.commit()
     except Exception as e:
-        logger.error("error occured while updating Image info ", exc_info=e)
+        logger.error("error occurred while updating Image info ", exc_info=e)

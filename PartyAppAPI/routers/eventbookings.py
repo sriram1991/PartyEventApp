@@ -92,7 +92,7 @@ async def get_booking_by_id(user: user_dependency, db: db_dependency, booking_id
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                 detail='Could not validate user.')
         bookings = db.query(BookingEntry).filter(BookingEntry.id == booking_id).first()
-        print(bookings)
+        logger.info(bookings)
         if bookings is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                 detail='Could not validate user.')

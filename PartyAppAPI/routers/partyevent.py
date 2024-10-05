@@ -44,8 +44,8 @@ def get_all_party_event(db: db_dependency):
         logger.info(f" eventList - {eventList}")
 
         if eventList is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            return logger.error("No Data found in Party Event")
+
         return eventList
     except Exception as e:
         logger.error("error in fetch All PartyEvents ", exc_info=e)
@@ -67,7 +67,7 @@ def create_party_event(user: user_dependency, db: db_dependency,
         logger.error("error in creating party event ", exc_info=e)
 
 @router.get("/get/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def get_slot(db: db_dependency, event_id: int = Path(gt=0)):
+async def get_party_event(db: db_dependency, event_id: int = Path(gt=0)):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
@@ -76,11 +76,11 @@ async def get_slot(db: db_dependency, event_id: int = Path(gt=0)):
         logger.info(f"event - {event}")
 
         if event is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            return logger.error(f"Selected event_id is invalid data or no match found in DB for {event_id}")
+
         return event
     except Exception as e:
-        logger.error(f"error in fetching event of {event_id} eventid ", exc_info=e)
+        logger.error(f"error in fetching event of {event_id} event id ", exc_info=e)
 
 @router.get("/getAll")
 def get_party_event(db: db_dependency):
@@ -97,8 +97,7 @@ async def update_event(user: user_dependency, db: db_dependency,
         event = db.query(PartyEvent).filter(PartyEvent.id == event_id).first()
 
         if event is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            return logger.error(f"Selected event_id is invalid data or no match found in DB for {event_id}")
 
         event.name = event_request.name
         event.description = event_request.description

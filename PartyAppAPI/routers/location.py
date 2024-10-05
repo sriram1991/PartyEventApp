@@ -86,8 +86,8 @@ def get_location(db: db_dependency, location_id: int = Path(gt=0)):
         location = db.query(Location).filter(Location.id == location_id).first()
         logger.info(location)
         if location is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            return logger.error(f"Selected id is invalid data or no match found in DB for location: {location_id}")
+
         return location
     except Exception as e:
         logger.error("error in fetch location", exc_info=e)
@@ -100,8 +100,7 @@ async def update_location(user: user_dependency, db: db_dependency,
                             detail='Could not validate user.')
     location = db.query(Location).filter(Location.id == location_id).first()
     if location is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
+        return logger.error(f"Selected id is invalid data or no match found in DB for Location {location_id}")
 
     location.name = location_request.name
     location.description = location_request.description
