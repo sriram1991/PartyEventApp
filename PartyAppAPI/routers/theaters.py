@@ -31,7 +31,6 @@ class CreateTheater(BaseModel):
     extra_cost_each_person: int
     location: int
     no_of_slots: int
-    slots: int
 
 
 db_dependency = Annotated[Session, Depends(get_db)]
@@ -106,7 +105,6 @@ async def update_theater(user: user_dependency, db: db_dependency,
     theater.extra_cost_each_person = theater_request.extra_cost_each_person
     theater.location = theater_request.location
     theater.no_of_slots = theater_request.no_of_slots
-    theater.slots = theater_request.slots
 
     db.add(theater)
     db.commit()

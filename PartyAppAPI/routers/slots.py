@@ -28,6 +28,8 @@ Base.metadata.create_all(bind=engine)
 class CreateSlots(BaseModel):
     slot_time_duration: str
     slot_date: datetime = None
+    location: int
+    theater: int
     is_active: bool
 
 
@@ -50,11 +52,11 @@ def get_all_slots(db: db_dependency):
         logger.error(f"error in getting AllSlots - ", exc_info=e)
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
-def create_location(user: user_dependency, db: db_dependency, slots_request: CreateSlots):
+def create_slots(db: db_dependency, slots_request: CreateSlots):
     try:
-        if user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
         slots_model = Slots(**slots_request.dict())
         db.add(slots_model)
         db.commit()

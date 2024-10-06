@@ -43,7 +43,6 @@ class Theater(Base):
     extra_cost_each_person = Column(Integer)
     location = Column(Integer, ForeignKey('location.id'))
     no_of_slots = Column(Integer)
-    slots = Column(Integer, ForeignKey('slots.id'))
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
 
 
@@ -92,6 +91,8 @@ class Slots(Base):
     id = Column(Integer, primary_key=True, index=True)
     slot_time_duration = Column(String(15))
     slot_date = Column(DateTime, default=datetime.utcnow)
+    location = Column(Integer, ForeignKey("location.id"))
+    theater = Column(Integer, ForeignKey("theater.id"))
     is_active = Column(Boolean)
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
 
