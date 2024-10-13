@@ -85,7 +85,7 @@ def get_all_booking(user: user_dependency, db: db_dependency):
     return get_all_event_bookings(user, db)
 
 
-@router.get("/get/{booking_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.get("/get/{booking_id}")
 async def get_booking_by_id(user: user_dependency, db: db_dependency, booking_id: int = Path(gt=0)):
     try:
         if user is None:
@@ -94,8 +94,7 @@ async def get_booking_by_id(user: user_dependency, db: db_dependency, booking_id
         bookings = db.query(BookingEntry).filter(BookingEntry.id == booking_id).first()
         logger.info(bookings)
         if bookings is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail='Could not validate user.')
+            return logger.error(f"Selected booking_id is invalid data or no match found in DB for {booking_id}")
         return bookings
     except Exception as e:
         logger.error(f"error getting booking_id {booking_id} ", exc_info=e)

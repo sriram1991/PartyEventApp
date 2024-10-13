@@ -68,7 +68,7 @@ def get_slots(db: db_dependency):
     return get_all_slots(db)
 
 
-@router.get("/get/{slot_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.get("/get/{slot_id}")
 async def get_slot(db: db_dependency, slot_id: int = Path(gt=0)):
     try:
         # if user is None:

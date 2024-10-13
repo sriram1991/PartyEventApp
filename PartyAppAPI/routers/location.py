@@ -72,17 +72,14 @@ def get_all_locations(db: db_dependency):
     return getAllLocation(db)
 
 
-@router.get("/get/{location_id}", status_code=status.HTTP_204_NO_CONTENT)
-def get_location(db: db_dependency, location_id: int = Path(gt=0)):
+@router.get("/get/{location_id}")
+def get_location(db: db_dependency, location_id: int):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
-        # session = Session()
-        # location = session.query(Location).filter(getattr(Location, id) == location_id).first()
-        # location = db.query(Location).filter_by(id = 1)
-        # logger.info(id)
-        # logger.info(location_id)
+
+        logger.info(location_id)
         location = db.query(Location).filter(Location.id == location_id).first()
         logger.info(location)
         if location is None:

@@ -66,8 +66,8 @@ def create_party_event(user: user_dependency, db: db_dependency,
     except Exception as e:
         logger.error("error in creating party event ", exc_info=e)
 
-@router.get("/get/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def get_party_event(db: db_dependency, event_id: int = Path(gt=0)):
+@router.get("/get/{event_id}")
+async def get_party_event(db: db_dependency, event_id: int):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,

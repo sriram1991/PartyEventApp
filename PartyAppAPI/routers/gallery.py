@@ -97,13 +97,15 @@ async def saveDataToDB(db: Session = Depends(get_db), name :str = Form(), locati
 #         logger.error("error in Uploading Image ", exc_info=e)
 #
 @router.get("/galleryByLocationByTheatre/{location_id}/{theater_id}")
-def get_gallery_by_location_by_theater(db: db_dependency, location_id: int = Path(gt=0), theater_id: int = Path(gt=1)):
+def get_gallery_by_location_by_theater(db: db_dependency, location_id: int, theater_id: int):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
-        galleryList = (db.query(Gallery).filter(Gallery.location == location_id,
-            Gallery.theater == theater_id).all())
+        logger.info(Gallery.location)
+        logger.info(Gallery.theater)
+        galleryList = db.query(Gallery).filter(Gallery.location == location_id,
+            Gallery.theater == theater_id).all()
 
         logger.info(f"galleryList by Location: {location_id} - Theater: {theater_id} - list:  {galleryList}")
 

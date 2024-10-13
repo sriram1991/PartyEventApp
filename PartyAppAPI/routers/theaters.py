@@ -73,7 +73,7 @@ def get_theaters(db: db_dependency):
     return get_all_theaters(db)
 
 
-@router.get("/get/{theater_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.get("/get/{theater_id}")
 def get_theater(db: db_dependency, theater_id: int = Path(gt=0)):
     try:
         # if user is None:

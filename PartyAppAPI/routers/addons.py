@@ -69,7 +69,7 @@ def get_addons(db: db_dependency):
     return get_all_addons(db)
 
 
-@router.get("/get/{addon_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.get("/get/{addon_id}")
 async def get_addons(db: db_dependency, addon_id: int = Path(gt=0)):
     try:
         # if user is None:
