@@ -145,8 +145,8 @@ def get_gallery(db: db_dependency):
 #     except Exception as e:
 #         logger.error("error Uploading a Image ", exc_info=e)
 #
-@router.get("/get/{gallery_id}", status_code=status.HTTP_204_NO_CONTENT)
-def get_gallery(db: db_dependency, gallery_id: int = Path(gt=0)):
+@router.get("/get/{gallery_id}")
+def get_gallery(db: db_dependency, gallery_id: int):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
@@ -160,9 +160,8 @@ def get_gallery(db: db_dependency, gallery_id: int = Path(gt=0)):
     except Exception as e:
         logger.error("error in fetch Gallery ", exc_info=e)
 
-@router.put("/update/{gallery_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def update_gallery(db: db_dependency, name: Optional[str] = None, location: Optional[int] = None,
-                        theater: Optional[int] = None,description: Optional[str] = None ,gallery_id: int = Path(gt=0)):
+@router.put("/update/{gallery_id}")
+async def update_gallery(db: db_dependency, gallery_request: CreateGallery, gallery_id: int):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
@@ -172,14 +171,11 @@ async def update_gallery(db: db_dependency, name: Optional[str] = None, location
         if gallery is None:
             return logger.error(f"Selected Gallery_id is invalid data or no match found in DB for {gallery_id}")
 
-        if name:
-            gallery.name = name
-        if location:
-            gallery.location = location
-        if theater:
-            gallery.theater = theater
-        if description:
-            gallery.description = description
+        gallery.name = gallery_request.name
+        gallery.location = gallery_request.location
+        gallery.theater = gallery_request.theater
+        gallery.description = gallery_request.description
+
         db.add(gallery)
         db.commit()
     except Exception as e:

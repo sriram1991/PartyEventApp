@@ -81,7 +81,7 @@ async def get_slot(db: db_dependency, slot_id: int = Path(gt=0)):
     except Exception as e:
         logger.error(f"error in getting slot id {slot_id} - ", exc_info=e)
 
-@router.put("/update/{slot_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.put("/update/{slot_id}")
 async def update_slots(user: user_dependency, db: db_dependency,
                        slots_request: CreateSlots, slot_id: int = Path(gt=0)):
     try:

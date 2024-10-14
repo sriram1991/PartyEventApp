@@ -87,7 +87,7 @@ def get_theater(db: db_dependency, theater_id: int = Path(gt=0)):
     except Exception as e:
         logger.error("error in fetch All Theaters ", exc_info=e)
 
-@router.put("/update/{theater_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.put("/update/{theater_id}")
 async def update_theater(user: user_dependency, db: db_dependency,
                          theater_request: CreateTheater, theater_id: int = Path(gt=0)):
     if user is None:

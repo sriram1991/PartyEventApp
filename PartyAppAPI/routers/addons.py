@@ -84,7 +84,7 @@ async def get_addons(db: db_dependency, addon_id: int = Path(gt=0)):
     except Exception as e:
         logger.error(f"error in fetch addon {addon_id} - ", exc_info=e)
 
-@router.put("/update/{addon_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.put("/update/{addon_id}")
 async def update_addons(user: user_dependency, db: db_dependency,
                        addon_request: CreateAddon, addon_id: int = Path(gt=0)):
     try:

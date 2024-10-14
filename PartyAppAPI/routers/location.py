@@ -7,7 +7,7 @@ import models
 sys.path.append("..")
 
 from starlette import status
-from models import Location
+from models import Location, Users
 
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Path
@@ -89,13 +89,14 @@ def get_location(db: db_dependency, location_id: int):
     except Exception as e:
         logger.error("error in fetch location", exc_info=e)
 
-@router.put("/update/{location_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def update_location(user: user_dependency, db: db_dependency,
-                          location_request: CreateLocation, location_id: int = Path(gt=0)):
+@router.put("/update/{location_id}")
+async def update_location(db: db_dependency, user: user_dependency,
+                    location_request: CreateLocation, location_id: int):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user.')
     location = db.query(Location).filter(Location.id == location_id).first()
+    logger.info(location)
     if location is None:
         return logger.error(f"Selected id is invalid data or no match found in DB for Location {location_id}")
 

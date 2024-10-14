@@ -87,9 +87,9 @@ def get_party_event(db: db_dependency):
     return get_all_party_event(db)
 
 
-@router.put("/update/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.put("/update/{event_id}")
 async def update_event(user: user_dependency, db: db_dependency,
-                       event_request: CreatePartyEvent, event_id: int = Path(gt=0)):
+                       event_request: CreatePartyEvent, event_id: int):
     try:
         if user is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
