@@ -88,12 +88,12 @@ def get_party_event(db: db_dependency):
 
 
 @router.put("/update/{event_id}")
-async def update_event(user: user_dependency, db: db_dependency,
+async def update_event(db: db_dependency,
                        event_request: CreatePartyEvent, event_id: int):
     try:
-        if user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
         event = db.query(PartyEvent).filter(PartyEvent.id == event_id).first()
 
         if event is None:

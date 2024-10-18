@@ -82,12 +82,11 @@ async def get_slot(db: db_dependency, slot_id: int = Path(gt=0)):
         logger.error(f"error in getting slot id {slot_id} - ", exc_info=e)
 
 @router.put("/update/{slot_id}")
-async def update_slots(user: user_dependency, db: db_dependency,
-                       slots_request: CreateSlots, slot_id: int = Path(gt=0)):
+async def update_slots(db: db_dependency, slots_request: CreateSlots, slot_id: int = Path(gt=0)):
     try:
-        if user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
         slots = db.query(Slots).filter(Slots.id == slot_id).first()
         if slots is None:
             return logger.error(f"Selected slots_id is invalid data or no match found in DB for {slot_id} to update")

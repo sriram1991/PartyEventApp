@@ -49,7 +49,7 @@ theatre_dependency = Annotated[dict, Depends(get_all_theaters)]
 
 @router.post("/createGallery", status_code=status.HTTP_201_CREATED)
 async def saveDataToDB(db: Session = Depends(get_db), name :str = Form(), location: int = Form(),
-                       theater: int = Form(), description: str = Form(), image: UploadFile = File(...)):
+                       theater: int = Form(), event_type: int= Form() ,description: str = Form(), image: UploadFile = File(...)):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
@@ -70,6 +70,7 @@ async def saveDataToDB(db: Session = Depends(get_db), name :str = Form(), locati
             name=name,
             location=location,
             theater=theater,
+            event_type=event_type,
             description=description,
             image_path=image_path
         )
