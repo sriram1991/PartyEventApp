@@ -40,7 +40,7 @@ class Theater(Base):
     description = Column(String(100))
     price = Column(Integer)
     no_of_peoples = Column(Integer)
-    event_type = Column(Integer, ForeignKey('party_event.id'))
+    # event_type = Column(Integer, ForeignKey('party_event.id'))
     extra_cost_each_person = Column(Integer)
     location = Column(Integer, ForeignKey('location.id'))
     no_of_slots = Column(Integer)
