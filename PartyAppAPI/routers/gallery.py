@@ -107,9 +107,9 @@ def get_gallery_by_location_by_theater_by_eventType(db: db_dependency, location_
         #                         detail='Could not validate user.')
         logger.info(Gallery.location)
         logger.info(Gallery.theater)
-        if location_id is None:
-            galleryList = db.query(Gallery).filter(Gallery.location == None,
-                Gallery.theater == theater_id, Gallery.event_type == event_type).all()
+
+        galleryList = db.query(Gallery).filter(Gallery.location == location_id,
+            Gallery.theater == theater_id, Gallery.event_type == event_type).all()
 
         logger.info(f"galleryList by Location: {location_id} - Theater: {theater_id} - list:  {galleryList}")
 
