@@ -98,7 +98,7 @@ async def saveDataToDB(db: Session = Depends(get_db), name :str = Form(), locati
 #     except Exception as e:
 #         logger.error("error in Uploading Image ", exc_info=e)
 #
-@router.get("/galleryByLocationByTheatreByEventType/{location_id}/{theater_id}{event_type}")
+@router.get("/galleryByLocationByTheatreByEventType/{location_id}/{theater_id}/{event_type}")
 def get_gallery_by_location_by_theater_by_eventType(db: db_dependency, location_id: Optional[int] = None,
                                                     theater_id: Optional[int] = None, event_type: Optional[int] = None):
     try:
