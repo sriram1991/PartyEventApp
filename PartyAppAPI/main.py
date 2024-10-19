@@ -14,7 +14,8 @@ models.Base.metadata.create_all(bind=engine)
 origins = [
     "https://ebfuncity.com/*",
     "https://ebfuncity.com:8000",
-    "https://ebfuncity.com:8000/*"
+    "https://ebfuncity.com:8000/*",
+    "https://ebfuncity.com:8000/auth/*"
 ]
 
 app.add_middleware(
