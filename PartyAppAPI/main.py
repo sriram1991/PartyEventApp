@@ -12,9 +12,9 @@ models.Base.metadata.create_all(bind=engine)
 
 # cors issue fix
 origins = [
-    "https://ebfuncity.com:8000/*",
     "https://ebfuncity.com/*",
-    "https://ebfuncity.com/angular/*"
+    "https://ebfuncity.com:8000",
+    "https://ebfuncity.com:8000/*"
 ]
 
 app.add_middleware(
