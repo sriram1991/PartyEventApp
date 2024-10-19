@@ -91,7 +91,7 @@ class Slots(Base):
     __tablename__ = 'slots'
 
     id = Column(Integer, primary_key=True, index=True)
-    slot_time_duration = Column(String(100))
+    slot_time_duration = Column(String(25))
     slot_date = Column(DateTime, default=datetime.utcnow)
     location = Column(Integer, ForeignKey("location.id"))
     theater = Column(Integer, ForeignKey("theater.id"))
