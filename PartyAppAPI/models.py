@@ -81,6 +81,7 @@ class Gallery(Base):
     name = Column(String(25))
     location = Column(Integer, ForeignKey("location.id"))
     theater = Column(Integer, ForeignKey("theater.id"))
+    event_type = Column(Integer, ForeignKey("party_event.id"))
     description = Column(String(100))
     image_path = Column(String(100))
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)

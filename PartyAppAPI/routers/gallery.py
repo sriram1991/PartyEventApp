@@ -22,7 +22,7 @@ from routers.auth import get_current_user
 from routers.theaters import get_all_theaters
 from routers.location import getAllLocation
 from database import engine, get_db
-from models import Base, Gallery, Theater, Location
+from models import Base, Gallery, Theater, Location, PartyEvent
 
 router = APIRouter(
     prefix="/gallery",
@@ -37,6 +37,7 @@ class CreateGallery(BaseModel):
     name: str
     location: int
     theatre: int
+    event_type: int
     description: str
     image_path: str
 
@@ -97,16 +98,18 @@ async def saveDataToDB(db: Session = Depends(get_db), name :str = Form(), locati
 #     except Exception as e:
 #         logger.error("error in Uploading Image ", exc_info=e)
 #
-@router.get("/galleryByLocationByTheatre/{location_id}/{theater_id}")
-def get_gallery_by_location_by_theater(db: db_dependency, location_id: int, theater_id: int):
+@router.get("/galleryByLocationByTheatreByEventType/{location_id}/{theater_id}{event_type}")
+def get_gallery_by_location_by_theater_by_eventType(db: db_dependency, location_id: Optional[int] = None,
+                                                    theater_id: Optional[int] = None, event_type: Optional[int] = None):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
         logger.info(Gallery.location)
         logger.info(Gallery.theater)
-        galleryList = db.query(Gallery).filter(Gallery.location == location_id,
-            Gallery.theater == theater_id).all()
+        if location_id is None:
+            galleryList = db.query(Gallery).filter(Gallery.location == None,
+                Gallery.theater == theater_id, Gallery.event_type == event_type).all()
 
         logger.info(f"galleryList by Location: {location_id} - Theater: {theater_id} - list:  {galleryList}")
 
