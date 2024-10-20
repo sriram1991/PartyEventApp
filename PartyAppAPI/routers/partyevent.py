@@ -63,8 +63,10 @@ def create_party_event(user: user_dependency, db: db_dependency,
         logger.info(f"event_model - {event_model}")
         db.add(event_model)
         db.commit()
+        return "Party_event creation Success.."
     except Exception as e:
         logger.error("error in creating party event ", exc_info=e)
+        return "Party_event creation Failed!"
 
 @router.get("/get/{event_id}")
 async def get_party_event(db: db_dependency, event_id: int):

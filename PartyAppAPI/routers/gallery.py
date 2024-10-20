@@ -79,9 +79,10 @@ async def saveDataToDB(db: Session = Depends(get_db), name :str = Form(), locati
         db.add(gallery)
         db.commit()
 
-        return "success"
+        return "Gallery creation Success.."
     except Exception as e:
         logger.error("error in Uploading Image ", exc_info=e)
+        return "Gallery creation Failed!"
 
 
 # # @router.get("/checkIsFileExist")

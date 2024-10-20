@@ -100,8 +100,10 @@ def reg_user(db: db_dependency, create_user: CreateUserRequest):
 
         db.add(create_user)
         db.commit()
+        return "User creation Success..."
     except Exception as e:
         logger.error(f"Error occurred while user creation - ", exc_info=e)
+        return "User creation Failed!"
 
 def authenticate_user(username: str, password: str, db):
     try:
@@ -116,6 +118,7 @@ def authenticate_user(username: str, password: str, db):
         return user
     except Exception as e:
         logger.error(f"Could not Authenticate user - ", exc_info=e)
+        return "User Authentication Failed!"
 
 @router.post("/login")
 def login_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: db_dependency):
@@ -142,8 +145,10 @@ def update_user(user: get_current_user, db: db_dependency, user_id: int = Path(g
         db_user.mobile = user.mobile
         db.add(db_user)
         db.commit()
+        return "User update success.."
     except Exception as e:
         logger.error(f"error in updating user {user_id} - ", exc_info=e)
+        return "User update Failed!"
 
 @router.get("/getUser/{user_id}")
 def get_user(user: get_current_user, db: db_dependency, user_id: int = Path(gt=0)):

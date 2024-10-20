@@ -57,15 +57,20 @@ def getAllLocation(db: db_dependency):
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 def create_location(user: user_dependency, db: db_dependency, location_request: CreateLocation):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
-    location_model = Location(**location_request.dict())
-    #in case of foreign key key=user.get('id')
-    # location_model.location = location_request.id
-    db.add(location_model)
-    db.commit()
+    try:
 
+        if user is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Could not validate user.')
+        location_model = Location(**location_request.dict())
+        #in case of foreign key key=user.get('id')
+        # location_model.location = location_request.id
+        db.add(location_model)
+        db.commit()
+        return "Location creation Success.."
+    except Exception as e:
+        logger.error(f"error in creating slots - ", exc_info=e)
+        return "Location creation Failed!"
 
 @router.get("/getAll")
 def get_all_locations(db: db_dependency):

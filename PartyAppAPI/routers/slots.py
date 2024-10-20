@@ -60,8 +60,10 @@ def create_slots(db: db_dependency, slots_request: CreateSlots):
         slots_model = Slots(**slots_request.dict())
         db.add(slots_model)
         db.commit()
+        return "Slot creation Success.."
     except Exception as e:
         logger.error(f"error in creating slots - ", exc_info=e)
+        return "Slot creation Failed!"
 
 @router.get("/getAll")
 def get_slots(db: db_dependency):

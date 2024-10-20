@@ -57,16 +57,20 @@ def get_all_theaters(db: db_dependency):
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 def create_theater(user: user_dependency, db: db_dependency,
                    theater_request: CreateTheater):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
-    theater_model = Theater(**theater_request.dict())
-    #in case of foreign key key=user.get('id')
+    try:
+        if user is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Could not validate user.')
+        theater_model = Theater(**theater_request.dict())
+        #in case of foreign key key=user.get('id')
 
-    logger.info(theater_model)
-    db.add(theater_model)
-    db.commit()
-
+        logger.info(theater_model)
+        db.add(theater_model)
+        db.commit()
+        return "Theater creation Success.."
+    except Exception as e:
+        logger.error("error in creating Theater ", exc_info=e)
+        return "Theater creation Failed!"
 
 @router.get("/getAll")
 def get_theaters(db: db_dependency):

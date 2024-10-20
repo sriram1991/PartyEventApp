@@ -34,6 +34,8 @@ class CreateEventBooking(BaseModel):
     date: datetime = None
     no_of_peoples: int
     addons_selected: str
+    first_spacial_name: str
+    second_spacial_name: str
     booking_name: str
     booking_mobile: str
     booking_email: str
@@ -53,9 +55,6 @@ party_dependency = Annotated[dict, Depends(get_all_party_event)]
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 def create_event_booking(db: db_dependency, event_request: CreateEventBooking):
     try:
-        # if user is None:
-        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-        #                         detail='Could not validate user.')
         booking_model = BookingEntry(**event_request.dict())
         #in case of foreign key key=user.get('id')
 
@@ -74,8 +73,8 @@ def get_all_event_bookings(user: user_dependency, db: db_dependency):
 
         logger.info(f"bookingList - {bookingList}")
         if bookingList is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail='Could not validate user.')
+            return logger.error("No Data found in Booking")
+
         return bookingList
     except Exception as e:
         logger.error("error in fetch All booking events ", exc_info=e)
