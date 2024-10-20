@@ -36,7 +36,7 @@ Base.metadata.create_all(bind=engine)
 class CreateGallery(BaseModel):
     name: str
     location: int
-    theatre: int
+    theater: int
     event_type: int
     description: str
     image_path: str
@@ -45,7 +45,7 @@ class CreateGallery(BaseModel):
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 location_dependency = Annotated[dict, Depends(getAllLocation)]
-theatre_dependency = Annotated[dict, Depends(get_all_theaters)]
+theater_dependency = Annotated[dict, Depends(get_all_theaters)]
 
 
 @router.post("/createGallery", status_code=status.HTTP_201_CREATED)
@@ -98,7 +98,7 @@ async def saveDataToDB(db: Session = Depends(get_db), name :str = Form(), locati
 #     except Exception as e:
 #         logger.error("error in Uploading Image ", exc_info=e)
 #
-@router.get("/galleryByLocationByTheatreByEventType/{location_id}/{theater_id}/{event_type}")
+@router.get("/galleryByLocationByTheaterByEventType/{location_id}/{theater_id}/{event_type}")
 def get_gallery_by_location_by_theater_by_eventType(db: db_dependency, location_id: Optional[int] = None,
                                                     theater_id: Optional[int] = None, event_type: Optional[int] = None):
     try:
