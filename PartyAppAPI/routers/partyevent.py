@@ -25,8 +25,6 @@ Base.metadata.create_all(bind=engine)
 class CreatePartyEvent(BaseModel):
     name: str
     description: str
-    spacial_name: str
-    spacial_other_name: str
     price: int
     image_path: str
 
@@ -103,8 +101,6 @@ async def update_event(db: db_dependency,
 
         event.name = event_request.name
         event.description = event_request.description
-        event.spacial_name = event_request.spacial_name
-        event.spacial_other_name = event_request.spacial_other_name
         event.price = event_request.price
         event.image_path = event_request.image_path
 

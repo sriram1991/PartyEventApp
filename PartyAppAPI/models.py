@@ -9,7 +9,7 @@ Base = declarative_base()
 class Users(Base):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     username = Column(String(20), unique=True)
     password = Column(String(150))
     email = Column(String(50), unique=True)
@@ -22,7 +22,7 @@ class Users(Base):
 class Location(Base):
     __tablename__ = 'location'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String(50))
     description = Column(String(100))
     address = Column(String(100))
@@ -35,7 +35,7 @@ class Location(Base):
 class Theater(Base):
     __tablename__ = 'theater'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String(25))
     description = Column(String(100))
     price = Column(Integer)
@@ -50,11 +50,9 @@ class Theater(Base):
 class PartyEvent(Base):
     __tablename__ = 'party_event'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String(25))
     description = Column(String(100))
-    spacial_name = Column(String(50))
-    spacial_other_name = Column(String(50))
     price = Column(Integer)
     image_path = Column(String(100))
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
@@ -63,7 +61,7 @@ class PartyEvent(Base):
 class AddOns(Base):
     __tablename__ = 'addons'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String(25))
     description = Column(String(100))
     type = Column(String(25))
@@ -77,7 +75,7 @@ class AddOns(Base):
 class Gallery(Base):
     __tablename__ = 'gallery'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String(25))
     location = Column(Integer, ForeignKey("location.id"))
     theater = Column(Integer, ForeignKey("theater.id"))
@@ -90,7 +88,7 @@ class Gallery(Base):
 class Slots(Base):
     __tablename__ = 'slots'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     slot_time_duration = Column(String(25))
     slot_date = Column(DateTime, default=datetime.utcnow)
     location = Column(Integer, ForeignKey("location.id"))
@@ -102,7 +100,7 @@ class Slots(Base):
 class BookingEntry(Base):
     __tablename__ = 'booking_entry'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     total_amount = Column(Integer)
     theater = Column(Integer, ForeignKey('theater.id'))
     location = Column(Integer, ForeignKey('location.id'))
