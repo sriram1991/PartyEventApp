@@ -90,22 +90,27 @@ def get_location(db: db_dependency, location_id: int):
         logger.error("error in fetch location", exc_info=e)
 
 @router.put("/update/{location_id}")
-async def update_location(db: db_dependency, user: user_dependency,
-                    location_request: CreateLocation, location_id: int):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
-    location = db.query(Location).filter(Location.id == location_id).first()
-    logger.info(location)
-    if location is None:
-        return logger.error(f"Selected id is invalid data or no match found in DB for Location {location_id}")
+async def update_location(db: db_dependency, location_request: CreateLocation,
+                          location_id: int):
+    try:
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        location = db.query(Location).filter(Location.id == location_id).first()
+        logger.info(location)
+        if location is None:
+            return logger.error(f"Selected id is invalid data or no match found in DB for Location {location_id}")
 
-    location.name = location_request.name
-    location.description = location_request.description
-    location.address = location_request.address
-    location.pincode = location_request.pincode
-    location.city = location_request.city
-    location.state = location_request.state
+        location.name = location_request.name
+        location.description = location_request.description
+        location.address = location_request.address
+        location.pincode = location_request.pincode
+        location.city = location_request.city
+        location.state = location_request.state
 
-    db.add(location)
-    db.commit()
+        db.add(location)
+        db.commit()
+        return "Location update success.."
+    except Exception as e:
+        logger.error(f"error in updating slot id {location_id} - ", exc_info=e)
+        return "Error in Location update!"

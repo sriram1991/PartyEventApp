@@ -88,23 +88,28 @@ def get_theater(db: db_dependency, theater_id: int = Path(gt=0)):
         logger.error("error in fetch All Theaters ", exc_info=e)
 
 @router.put("/update/{theater_id}")
-async def update_theater(user: user_dependency, db: db_dependency,
+async def update_theater(db: db_dependency,
                          theater_request: CreateTheater, theater_id: int = Path(gt=0)):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail='Could not validate user.')
-    theater = db.query(Theater).filter(Theater.id == theater_id).first()
+    try:
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        theater = db.query(Theater).filter(Theater.id == theater_id).first()
 
-    if theater is None:
-        return logger.error(f"Selected id is invalid data or no match found in DB for {theater_id}")
+        if theater is None:
+            return logger.error(f"Selected id is invalid data or no match found in DB for {theater_id}")
 
-    theater.name = theater_request.name
-    theater.description = theater_request.description
-    theater.price = theater_request.price
-    theater.no_of_peoples = theater_request.no_of_peoples
-    theater.extra_cost_each_person = theater_request.extra_cost_each_person
-    theater.location = theater_request.location
-    theater.no_of_slots = theater_request.no_of_slots
+        theater.name = theater_request.name
+        theater.description = theater_request.description
+        theater.price = theater_request.price
+        theater.no_of_peoples = theater_request.no_of_peoples
+        theater.extra_cost_each_person = theater_request.extra_cost_each_person
+        theater.location = theater_request.location
+        theater.no_of_slots = theater_request.no_of_slots
 
-    db.add(theater)
-    db.commit()
+        db.add(theater)
+        db.commit()
+        return "Theater update success.."
+    except Exception as e:
+        logger.error(f"error in updating event {theater_id} in DB ", exc_info=e)
+        return "Error in Theater update!"

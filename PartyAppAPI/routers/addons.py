@@ -85,12 +85,12 @@ async def get_addons(db: db_dependency, addon_id: int = Path(gt=0)):
         logger.error(f"error in fetch addon {addon_id} - ", exc_info=e)
 
 @router.put("/update/{addon_id}")
-async def update_addons(user: user_dependency, db: db_dependency,
+async def update_addons(db: db_dependency,
                        addon_request: CreateAddon, addon_id: int = Path(gt=0)):
     try:
-        if user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
         addon = db.query(AddOns).filter(AddOns.id == addon_id).first()
         if addon is None:
             return logger.error(f"Selected Gallery_id is invalid data or no match found in DB for {addon_id} to update")
@@ -105,5 +105,7 @@ async def update_addons(user: user_dependency, db: db_dependency,
 
         db.add(addon)
         db.commit()
+        return "Addon update success.."
     except Exception as e:
         logger.error(f"error in updating addon {addon_id} - ", exc_info=e)
+        return "Error in Addon update!"

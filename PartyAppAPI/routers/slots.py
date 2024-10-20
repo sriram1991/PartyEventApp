@@ -97,5 +97,7 @@ async def update_slots(db: db_dependency, slots_request: CreateSlots, slot_id: i
 
         db.add(slots)
         db.commit()
+        return "Slot update success.."
     except Exception as e:
         logger.error(f"error in updating slot id {slot_id} - ", exc_info=e)
+        return "Error in slot update!"

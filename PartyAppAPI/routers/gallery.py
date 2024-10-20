@@ -182,5 +182,7 @@ async def update_gallery(db: db_dependency, gallery_request: CreateGallery, gall
 
         db.add(gallery)
         db.commit()
+        return "Gallery update success.."
     except Exception as e:
         logger.error("error occurred while updating Image info ", exc_info=e)
+        return "Error in Gallery update!"

@@ -108,5 +108,7 @@ async def update_event(db: db_dependency,
 
         db.add(event)
         db.commit()
+        return "Event update success.."
     except Exception as e:
         logger.error(f"error in updating event {event_id} in DB ", exc_info=e)
+        return "Error in Event update!"
