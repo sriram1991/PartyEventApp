@@ -60,6 +60,7 @@ def create_event_booking(db: db_dependency, event_request: CreateEventBooking):
         logger.info(f"booking_model - {booking_model}")
         db.add(booking_model)
         db.commit()
+
         return "Booking Created Successfully.."
     except Exception as e:
         logger.error("error in fetch All Theaters ", exc_info=e)
