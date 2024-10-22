@@ -67,7 +67,7 @@ def create_theater(user: user_dependency, db: db_dependency,
         logger.info(theater_model)
         db.add(theater_model)
         db.commit()
-        return "Theater creation Success.."
+        return "Theater Created Successfully.."
     except Exception as e:
         logger.error("error in creating Theater ", exc_info=e)
         return "Theater creation Failed!"

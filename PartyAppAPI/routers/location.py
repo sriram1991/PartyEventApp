@@ -67,7 +67,7 @@ def create_location(user: user_dependency, db: db_dependency, location_request: 
         # location_model.location = location_request.id
         db.add(location_model)
         db.commit()
-        return "Location creation Success.."
+        return "Location Created Successfully.."
     except Exception as e:
         logger.error(f"error in creating slots - ", exc_info=e)
         return "Location creation Failed!"
@@ -115,7 +115,7 @@ async def update_location(db: db_dependency, location_request: CreateLocation,
 
         db.add(location)
         db.commit()
-        return "Location update success.."
+        return "Location updated successfully.."
     except Exception as e:
         logger.error(f"error in updating slot id {location_id} - ", exc_info=e)
         return "Error in Location update!"

@@ -1,9 +1,8 @@
 import sys
 
-from logger import logger
-
 sys.path.append("..")
 
+from logger import logger
 from routers.location import getAllLocation
 from routers.partyevent import get_all_party_event
 from routers.slots import get_all_slots
@@ -61,14 +60,16 @@ def create_event_booking(db: db_dependency, event_request: CreateEventBooking):
         logger.info(f"booking_model - {booking_model}")
         db.add(booking_model)
         db.commit()
+        return "Booking Created Successfully.."
     except Exception as e:
         logger.error("error in fetch All Theaters ", exc_info=e)
+        return "Booking creation Failed!"
 
-def get_all_event_bookings(user: user_dependency, db: db_dependency):
+def get_all_event_bookings(db: db_dependency):
     try:
-        if user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
         bookingList = db.query(BookingEntry).all()
 
         logger.info(f"bookingList - {bookingList}")
@@ -80,16 +81,16 @@ def get_all_event_bookings(user: user_dependency, db: db_dependency):
         logger.error("error in fetch All booking events ", exc_info=e)
 
 @router.get("/getAll")
-def get_all_booking(user: user_dependency, db: db_dependency):
-    return get_all_event_bookings(user, db)
+def get_all_booking(db: db_dependency):
+    return get_all_event_bookings(db)
 
 
 @router.get("/get/{booking_id}")
-async def get_booking_by_id(user: user_dependency, db: db_dependency, booking_id: int = Path(gt=0)):
+async def get_booking_by_id(db: db_dependency, booking_id: int = Path(gt=0)):
     try:
-        if user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
         bookings = db.query(BookingEntry).filter(BookingEntry.id == booking_id).first()
         logger.info(bookings)
         if bookings is None:

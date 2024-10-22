@@ -100,7 +100,7 @@ def reg_user(db: db_dependency, create_user: CreateUserRequest):
 
         db.add(create_user)
         db.commit()
-        return "User creation Success..."
+        return "User Created Successfully..."
     except Exception as e:
         logger.error(f"Error occurred while user creation - ", exc_info=e)
         return "User creation Failed!"

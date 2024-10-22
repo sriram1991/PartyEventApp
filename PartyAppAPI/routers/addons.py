@@ -61,7 +61,7 @@ def create_addon(user: user_dependency, db: db_dependency, addon_request: Create
         addon_model = AddOns(**addon_request.dict())
         db.add(addon_model)
         db.commit()
-        return "Addon creation Success.."
+        return "Addon Created Successfully.."
     except Exception as e:
         logger.error("error in creating Addons ", exc_info=e)
         return "Addon creation Failed!"

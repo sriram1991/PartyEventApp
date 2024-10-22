@@ -61,7 +61,7 @@ def create_party_event(user: user_dependency, db: db_dependency,
         logger.info(f"event_model - {event_model}")
         db.add(event_model)
         db.commit()
-        return "Party_event creation Success.."
+        return "Party event Created Successfully.."
     except Exception as e:
         logger.error("error in creating party event ", exc_info=e)
         return "Party_event creation Failed!"

@@ -60,7 +60,7 @@ def create_slots(db: db_dependency, slots_request: CreateSlots):
         slots_model = Slots(**slots_request.dict())
         db.add(slots_model)
         db.commit()
-        return "Slot creation Success.."
+        return "Slot Created Successfully.."
     except Exception as e:
         logger.error(f"error in creating slots - ", exc_info=e)
         return "Slot creation Failed!"
@@ -99,7 +99,7 @@ async def update_slots(db: db_dependency, slots_request: CreateSlots, slot_id: i
 
         db.add(slots)
         db.commit()
-        return "Slot update success.."
+        return "Slot updated successfully.."
     except Exception as e:
         logger.error(f"error in updating slot id {slot_id} - ", exc_info=e)
         return "Error in slot update!"
