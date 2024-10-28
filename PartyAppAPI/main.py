@@ -22,6 +22,7 @@ origins = [
 #mount the Images via static/images
 app.mount("/static/images", StaticFiles(directory="static/images"), name="static")
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
