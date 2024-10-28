@@ -4,6 +4,7 @@ from database import engine
 from routers import auth, location, gallery, theaters, slots, addons, partyevent, eventbookings
 from logger import logger
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 logger.debug('Main class of API started.....')
@@ -17,6 +18,9 @@ origins = [
     "https://ebfuncity.com:8000/*",
     "https://ebfuncity.com:8000/auth/login",
 ]
+
+#mount the Images via static/images
+app.mount("/static/images", StaticFiles(directory="static/images"), name="static")
 
 app.add_middleware(
     CORSMiddleware,
