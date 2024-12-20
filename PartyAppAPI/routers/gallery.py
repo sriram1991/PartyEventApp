@@ -187,3 +187,23 @@ async def update_gallery(db: db_dependency, gallery_request: CreateGallery, gall
     except Exception as e:
         logger.error("error occurred while updating Image info ", exc_info=e)
         return "Error in Gallery update!"
+
+
+@router.delete("/delete/{gallery_id}")
+async def delete_gallery(db: db_dependency, gallery_id: int):
+    try:
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        gallery = db.query(Gallery).filter(Gallery.id == gallery_id).first()
+        if gallery is None:
+            return logger.error(f"No match found in DB for id: {gallery_id}")
+        else:
+            # delete gallery_id
+            print(gallery)
+            db.delete(gallery)
+            db.commit()
+            return f"gallery {gallery_id} deleted.."
+    except Exception as e:
+        logger.error(f"error in deleting event {gallery_id} in DB ", exc_info=e)
+        return "Error in gallery delete!"

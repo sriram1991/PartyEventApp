@@ -40,7 +40,6 @@ class Theater(Base):
     description = Column(String(100))
     price = Column(Integer)
     no_of_peoples = Column(Integer)
-    is_active = Column(Boolean)
     # event_type = Column(Integer, ForeignKey('party_event.id'))
     extra_cost_each_person = Column(Integer)
     location = Column(Integer, ForeignKey('location.id'))
@@ -97,16 +96,6 @@ class Slots(Base):
     is_active = Column(Boolean)
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
 
-
-class CouponCode(Base):
-    __tablename__ = 'coupon_code'
-
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    name = Column(String(25))
-    unique_code = Column(String(25), unique=True)
-    discount = Column(Integer)
-    is_active = Column(Boolean)
-    created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
 
 class BookingEntry(Base):
     __tablename__ = 'booking_entry'

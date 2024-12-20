@@ -100,6 +100,24 @@ async def get_booking_by_id(db: db_dependency, booking_id: int = Path(gt=0)):
     except Exception as e:
         logger.error(f"error getting booking_id {booking_id} ", exc_info=e)
 
+
+@router.put("/grant")
+async def grant_booking(db: db_dependency, booking_id: int = Path(gt=0)):
+    try:
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        bookings = db.query(BookingEntry).filter(BookingEntry.id == booking_id).first()
+        if bookings is None:
+            return logger.error(f"Selected booking_id is invalid data or no match found in DB for {booking_id}")
+        bookings.is_granted = True
+        db.add(bookings)
+        db.commit()
+        return bookings
+    except Exception as e:
+        logger.error(f"error in granting booking_id {booking_id} ", exc_info=e)
+
+
 @router.delete("/delete/{booking_id}")
 async def delete_booking(user: user_dependency, db: db_dependency, booking_id: int = Path(gt=0)):
     try:

@@ -29,6 +29,7 @@ class CreateTheater(BaseModel):
     price: int
     no_of_peoples: int
     extra_cost_each_person: int
+    is_active: bool
     location: int
     no_of_slots: int
 
@@ -109,6 +110,7 @@ async def update_theater(db: db_dependency,
         theater.no_of_peoples = theater_request.no_of_peoples
         theater.extra_cost_each_person = theater_request.extra_cost_each_person
         theater.location = theater_request.location
+        theater.is_active = theater_request.is_active
         theater.no_of_slots = theater_request.no_of_slots
 
         db.add(theater)
@@ -117,3 +119,26 @@ async def update_theater(db: db_dependency,
     except Exception as e:
         logger.error(f"error in updating event {theater_id} in DB ", exc_info=e)
         return "Error in Theater update!"
+
+@router.put("/disable/{theater_id}")
+async def disable_theater(db: db_dependency,
+                            theater_id: int = Path(gt=0)):
+    try:
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        theater = db.query(Theater).filter(Theater.id == theater_id).first()
+        print(theater.id)
+        if theater is None:
+            print("No theater found...")
+            return logger.error(f"No match found in DB for id: {theater_id}")
+        else:
+            # disableing Theater
+            theater.is_active = 0
+            print("theater")
+            print(theater)
+            return f"Theater {theater_id} disabled success.."
+    except Exception as e:
+        logger.error(f"error in updating event {theater_id} in DB ", exc_info=e)
+        return "Error in Theater update!"
+
