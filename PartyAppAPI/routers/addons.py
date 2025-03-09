@@ -109,3 +109,21 @@ async def update_addons(db: db_dependency,
     except Exception as e:
         logger.error(f"error in updating addon {addon_id} - ", exc_info=e)
         return "Error in Addon update!"
+    
+    # write an delete addon api
+@router.delete("/delete/{addon_id}")
+async def delete_addon(db: db_dependency, addon_id: int = Path(gt=0)):
+    try:
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        addon = db.query(AddOns).filter(AddOns.id == addon_id).first()
+        if addon is None:
+            return logger.error(f"Selected addon_id is invalid data or no match found in DB for {addon_id} to delete")
+
+        db.delete(addon)
+        db.commit()
+        return "Addon deleted successfully.."
+    except Exception as e:
+        logger.error(f"error in deleting addon {addon_id} - ", exc_info=e)
+        return "Error in Addon deletion!"

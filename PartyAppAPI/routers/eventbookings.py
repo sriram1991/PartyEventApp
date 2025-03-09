@@ -135,3 +135,4 @@ async def delete_booking(user: user_dependency, db: db_dependency, booking_id: i
             # db.query(BookingEntry).filter(BookingEntry.id == booking_id).delete()
     except Exception as e:
         logger.error(f"error in deleting Booking id {booking_id} ", exc_info=e)
+

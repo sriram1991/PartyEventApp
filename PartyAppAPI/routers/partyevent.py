@@ -110,3 +110,24 @@ async def update_event(db: db_dependency,
     except Exception as e:
         logger.error(f"error in updating event {event_id} in DB ", exc_info=e)
         return "Error in Event update!"
+
+# write an delete event api
+@router.delete("/delete/{event_id}")
+async def delete_event(db: db_dependency, event_id: int):
+    try:
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        event = db.query(PartyEvent).filter(PartyEvent.id == event_id).first()
+
+        if event is None:
+            return logger.error(f"No match found in DB for id: {event_id}")
+        else:
+            # delete event_id
+            print(event)
+            db.delete(event)
+            db.commit()
+            return f"event {event_id} deleted.."
+    except Exception as e:
+        logger.error(f"error in deleting event {event_id} in DB ", exc_info=e)
+        return "Error in event delete!"
