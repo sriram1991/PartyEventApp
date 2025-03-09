@@ -40,6 +40,7 @@ class CreateEventBooking(BaseModel):
     booking_email: str
     advance_amount: int
     discount_coupon: str
+    is_active: bool
     referral_code: str
 
 
@@ -118,7 +119,7 @@ async def grant_booking(db: db_dependency, booking_id: int = Path(gt=0)):
         logger.error(f"error in granting booking_id {booking_id} ", exc_info=e)
 
 
-@router.delete("/delete/{booking_id}")
+@router.put("/disable/{booking_id}")
 async def delete_booking(user: user_dependency, db: db_dependency, booking_id: int = Path(gt=0)):
     try:
         if user is None:
@@ -126,9 +127,11 @@ async def delete_booking(user: user_dependency, db: db_dependency, booking_id: i
                                 detail='Could not validate user.')
         bookings = db.query(BookingEntry).filter(BookingEntry.id == booking_id).first()
         if bookings is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail='Could not validate user.')
-        db.query(BookingEntry).filter(BookingEntry.id == booking_id).delete()
-        return bookings
+            print("No theater found...")
+            return logger.error(f"No match found in DB for id: {booking_id}")
+        else:
+            bookings.is_active = 0
+            return f"Booking id {booking_id} disabled success.."
+            # db.query(BookingEntry).filter(BookingEntry.id == booking_id).delete()
     except Exception as e:
         logger.error(f"error in deleting Booking id {booking_id} ", exc_info=e)

@@ -24,7 +24,7 @@ class Location(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String(50))
-    description = Column(String(100))
+    description = Column(String(100), nullable=True)
     address = Column(String(100))
     pincode = Column(Integer, nullable=False)
     city = Column(String(15))
@@ -37,7 +37,7 @@ class Theater(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String(25))
-    description = Column(String(100))
+    description = Column(String(100), nullable=True)
     price = Column(Integer)
     no_of_peoples = Column(Integer)
     is_active = Column(Boolean)
@@ -53,9 +53,9 @@ class PartyEvent(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String(25))
-    description = Column(String(100))
+    description = Column(String(100), nullable=True)
     price = Column(Integer)
-    image_path = Column(String(100))
+    image_path = Column(String(100), nullable=True)
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
 
 
@@ -64,11 +64,10 @@ class AddOns(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String(25))
-    description = Column(String(100))
+    description = Column(String(100), nullable=True)
     type = Column(String(25))
-    quantity = Column(Integer)
     price = Column(Integer)
-    image_path = Column(String(100))
+    image_path = Column(String(100), nullable=True)
     is_available = Column(Boolean)
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
 
@@ -81,8 +80,8 @@ class Gallery(Base):
     location = Column(Integer, ForeignKey("location.id"))
     theater = Column(Integer, ForeignKey("theater.id"))
     event_type = Column(Integer, ForeignKey("party_event.id"))
-    description = Column(String(100))
-    image_path = Column(String(100))
+    description = Column(String(100), nullable=True)
+    image_path = Column(String(100), nullable=True)
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
 
 
@@ -94,7 +93,7 @@ class Slots(Base):
     slot_date = Column(DateTime, default=datetime.utcnow)
     location = Column(Integer, ForeignKey("location.id"))
     theater = Column(Integer, ForeignKey("theater.id"))
-    is_active = Column(Boolean)
+    is_active = Column(Boolean, default=True)
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
 
 
@@ -105,7 +104,7 @@ class CouponCode(Base):
     name = Column(String(25))
     unique_code = Column(String(25), unique=True)
     discount = Column(Integer)
-    is_active = Column(Boolean)
+    is_active = Column(Boolean, default=True)
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
 
 class BookingEntry(Base):
@@ -126,6 +125,7 @@ class BookingEntry(Base):
     booking_mobile = Column(String(15))
     booking_email = Column(String(100))
     advance_amount = Column(Integer)
+    is_active = Column(Boolean, default=False)
     discount_coupon = Column(String(50), nullable=True)
     referral_code = Column(String(50), nullable=True)
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)

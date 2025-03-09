@@ -27,7 +27,6 @@ class CreateAddon(BaseModel):
     name: str
     description: str
     type: str
-    quantity: int
     price: int
     image_path: str
     is_available: bool
@@ -100,7 +99,6 @@ async def update_addons(db: db_dependency,
         addon.name = addon_request.name
         addon.description = addon_request.description
         addon.type = addon_request.type
-        addon.quantity = addon_request.quantity
         addon.price = addon_request.price
         addon.image_path = addon_request.image_path
         addon.is_available = addon_request.is_available
