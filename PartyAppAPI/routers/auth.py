@@ -161,3 +161,20 @@ def get_user(user: get_current_user, db: db_dependency, user_id: int = Path(gt=0
         return db_user
     except Exception as e:
         logger.error(f"error in updating user {user_id} - ", exc_info=e)
+
+@router.delete("/deleteUser/{user_id}")
+def delete_user(user: get_current_user, db: db_dependency, user_id: int = Path(gt=0)):
+    try:
+        if user is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Could not validate user.')
+        db_user = db.query(Users).filter(user.username == user_id).first()
+        if db_user is None:
+            return logger.error(f"No match found in DB for id: {user_id}")
+        else:
+            db.delete(db_user)
+            db.commit()
+            return f"User {user_id} deleted.."
+    except Exception as e:
+        logger.error(f"error in deleting user {user_id} in DB ", exc_info=e)
+        return "Error in user delete!"

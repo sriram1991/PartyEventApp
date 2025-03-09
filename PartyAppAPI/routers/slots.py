@@ -103,3 +103,22 @@ async def update_slots(db: db_dependency, slots_request: CreateSlots, slot_id: i
     except Exception as e:
         logger.error(f"error in updating slot id {slot_id} - ", exc_info=e)
         return "Error in slot update!"
+
+@router.delete("/delete/{slot_id}")
+async def delete_slots(db: db_dependency, slot_id: int = Path(gt=0)):
+    try:
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
+        slots = db.query(Slots).filter(Slots.id == slot_id).first()
+        if slots is None:
+            return logger.error(f"No match found in DB for id: {slot_id}")
+        else:
+            # delete slot_id
+            db.delete(slots)
+            db.commit()
+            return f"Slot {slot_id} deleted.."
+    except Exception as e:
+        logger.error(f"error in deleting slot {slot_id} in DB ", exc_info=e)
+        return "Error in slot delete!"
+    
