@@ -125,7 +125,7 @@ class BookingEntry(Base):
     booking_mobile = Column(String(15))
     booking_email = Column(String(100))
     advance_amount = Column(Integer)
-    is_active = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=0)
     discount_coupon = Column(String(50), nullable=True)
     referral_code = Column(String(50), nullable=True)
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
