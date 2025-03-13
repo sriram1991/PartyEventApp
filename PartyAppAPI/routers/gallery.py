@@ -190,7 +190,7 @@ async def update_gallery(db: db_dependency, gallery_request: CreateGallery, gall
 
 
 @router.delete("/delete/{gallery_id}")
-async def delete_gallery(db: db_dependency, gallery_id: int):
+async def delete_gallery(db: db_dependency, gallery_id: int = Path(gt=0)):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
