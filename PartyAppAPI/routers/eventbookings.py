@@ -38,7 +38,7 @@ class CreateEventBooking(BaseModel):
     booking_name: str
     booking_mobile: str
     booking_email: str = None
-    advance_amount: int = None
+    advance_amount: int = 0
     discount_coupon: str = None
     is_active: bool = True
     referral_code: str = None
