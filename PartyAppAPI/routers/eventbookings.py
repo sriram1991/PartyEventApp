@@ -31,17 +31,17 @@ Base.metadata.create_all(bind=engine)
 class CreateEventBooking(BaseModel):
     total_amount: int
     date: datetime = None
-    no_of_peoples: int
+    no_of_peoples: int = 1
     addons_selected: str
-    first_spacial_name: str
-    second_spacial_name: str
+    first_spacial_name: str = None
+    second_spacial_name: str = None
     booking_name: str
     booking_mobile: str
-    booking_email: str
-    advance_amount: int
-    discount_coupon: str
-    is_active: bool
-    referral_code: str
+    booking_email: str = None
+    advance_amount: int = None
+    discount_coupon: str = None
+    is_active: bool = True
+    referral_code: str = None
 
 
 db_dependency = Annotated[Session, Depends(get_db)]
