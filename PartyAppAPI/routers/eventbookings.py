@@ -122,9 +122,9 @@ async def grant_booking(db: db_dependency, booking_id: int = Path(gt=0)):
 @router.put("/disable/{booking_id}")
 async def delete_booking(user: user_dependency, db: db_dependency, booking_id: int = Path(gt=0)):
     try:
-        if user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
         bookings = db.query(BookingEntry).filter(BookingEntry.id == booking_id).first()
         if bookings is None:
             print("No theater found...")
