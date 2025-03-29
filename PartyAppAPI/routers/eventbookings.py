@@ -131,6 +131,8 @@ async def delete_booking(db: db_dependency, booking_id: int = Path(gt=0)):
             return logger.error(f"No match found in DB for id: {booking_id}")
         else:
             bookings.is_active = 0
+            db.add(bookings)
+            db.commit()
             return f"Booking id {booking_id} disabled success.."
             # db.query(BookingEntry).filter(BookingEntry.id == booking_id).delete()
     except Exception as e:
