@@ -59,6 +59,7 @@ def create_access_token(username: str, user_id: int, expires_delta: timedelta):
         return jwt.encode(encode, SECRET_KEY, algorithm=ALGO)
     except Exception as e:
         logger.error(f"error creating access_token - ", exc_info=e)
+        return f"error creating access_token - "
 
 def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     try:
@@ -71,6 +72,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
         return {'username': username, 'id': user_id}
     except PyJWTError as e:
         logger.error(f"Could not validate user. - ", exc_info=e)
+        return f"Could not validate user. - "
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
@@ -132,6 +134,7 @@ def login_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], 
         return {'access_token': token, 'token_type': 'bearer'}
     except Exception as e:
         logger.error(f"Error occurred in Authenticating user. - ", exc_info=e)
+        return f"Error occurred in Authenticating user. - "
 
 @router.put("/updateUser/{user_id}")
 def update_user(user: get_current_user, db: db_dependency, user_id: int = Path(gt=0)):

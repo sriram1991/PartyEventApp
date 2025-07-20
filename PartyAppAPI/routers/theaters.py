@@ -61,9 +61,9 @@ def get_all_theaters(db: db_dependency):
 def create_theater(user: user_dependency, db: db_dependency,
                    theater_request: CreateTheater):
     try:
-        if user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
         theater_model = Theater(**theater_request.dict())
         #in case of foreign key key=user.get('id')
 

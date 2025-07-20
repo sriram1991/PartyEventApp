@@ -60,9 +60,9 @@ def getAllLocation(db: db_dependency):
 def create_location(user: user_dependency, db: db_dependency, location_request: CreateLocation):
     try:
 
-        if user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
         location_model = Location(**location_request.dict())
         #in case of foreign key key=user.get('id')
         # location_model.location = location_request.id

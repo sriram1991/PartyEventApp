@@ -56,9 +56,9 @@ def get_all_addons(db: db_dependency):
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 def create_addon(user: user_dependency, db: db_dependency, addon_request: CreateAddon):
     try:
-        if user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
         addon_model = AddOns(**addon_request.dict())
         db.add(addon_model)
         db.commit()

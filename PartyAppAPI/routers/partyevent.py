@@ -54,9 +54,9 @@ def get_all_party_event(db: db_dependency):
 def create_party_event(user: user_dependency, db: db_dependency,
                        event_request: CreatePartyEvent):
     try:
-        if user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+        # if user is None:
+        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+        #                         detail='Could not validate user.')
         event_model = PartyEvent(**event_request.dict())
         #in case of foreign key key=user.get('id')
 
