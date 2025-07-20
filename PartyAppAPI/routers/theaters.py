@@ -132,15 +132,15 @@ async def disable_theater(db: db_dependency,
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
         theater = db.query(Theater).filter(Theater.id == theater_id).first()
-        print(theater.id)
+        logger.info(theater.id)
         if theater is None:
             logger.error(f"No match found in DB for id: {theater_id}")
             return f"No match found in DB for id: {theater_id}"
         else:
             # disableing Theater
             theater.is_active = 0
-            print("theater")
-            print(theater)
+            logger.info("theater")
+            logger.info(f"Theater {theater_id} disabled success..")
             return f"Theater {theater_id} disabled success.."
     except Exception as e:
         logger.error(f"error in updating event {theater_id} in DB ", exc_info=e)

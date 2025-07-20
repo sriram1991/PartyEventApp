@@ -50,7 +50,8 @@ theater_dependency = Annotated[dict, Depends(get_all_theaters)]
 
 @router.post("/createGallery", status_code=status.HTTP_201_CREATED)
 async def saveDataToDB(db: Session = Depends(get_db), name :str = Form(), location: int = Form(),
-                       theater: int = Form(), event_type: int= Form() ,description: str = Form(), image: UploadFile = File(...)):
+                       theater: int = Form(), event_type: int= Form() ,description: str = Form(),
+                       image: UploadFile = File(...)):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
@@ -209,7 +210,7 @@ async def delete_gallery(db: db_dependency, gallery_id: int = Path(gt=0)):
             return f"No match found in DB for id: {gallery_id}"
         else:
             # delete gallery_id
-            print(gallery)
+            logger.info(f"Gallery id {gallery_id} got deleted!")
             db.delete(gallery)
             db.commit()
             return f"gallery {gallery_id} deleted.."

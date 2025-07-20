@@ -1,10 +1,13 @@
 import sys
+import os
 
+import models
 from logger import logger
+from utils.constants import UPLOAD_DIR
 
 sys.path.append("..")
 
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, Depends, HTTPException, Path, UploadFile, File, Form
 from pydantic import BaseModel
 from typing import Annotated
 from sqlalchemy.orm import Session
@@ -54,13 +57,33 @@ def get_all_addons(db: db_dependency):
         return "error in fetch All Addon"
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
-def create_addon(db: db_dependency, addon_request: CreateAddon):
+def create_addon(db: Session = Depends(get_db), name :str = Form(), description: str = Form(),
+                 type: str = Form(), price: int = Form(), image_path: str = Form(),
+                 is_available: bool = Form(), image_file: UploadFile = File(...)):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
-        addon_model = AddOns(**addon_request.dict())
-        db.add(addon_model)
+        # addon_model = AddOns(**addon_request.dict())
+        print(image_file)
+        print(image_file.filename)
+        filename = image_file.filename
+        logger.info(filename)
+        image_path = os.path.join(UPLOAD_DIR, filename)
+        with open(image_path, "wb") as f:
+            f.write(image_file.file.read())
+
+        addon = models.AddOns(
+            name=name,
+            description=description,
+            type=type,
+            price=price,
+            is_available=is_available,
+            image_path=image_path
+        )
+
+        logger.info(addon)
+        db.add(addon)
         db.commit()
         return "Addon Created Successfully.."
     except Exception as e:

@@ -129,7 +129,7 @@ def delete_coupon(db: db_dependency, coupon_id: int = Path(gt=0)):
             logger.error(f"No match found in DB for id: {coupon_id}")
             return f"No match found in DB for id: {coupon_id}"
         else:
-            print(coupon.id)
+            logger.info(f"Theater {coupon.id} disabled success..")
             # delete coupon_id
             db.delete(coupon)
             db.commit()

@@ -130,7 +130,7 @@ async def delete_event(db: db_dependency, event_id: int):
             return f"No match found in DB for id: {event_id}"
         else:
             # delete event_id
-            print(event)
+            logger.info(f"Event id {event_id} got deleted!")
             db.delete(event)
             db.commit()
             return f"event {event_id} deleted.."
