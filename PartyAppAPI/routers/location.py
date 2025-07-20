@@ -57,7 +57,7 @@ def getAllLocation(db: db_dependency):
         return "error in fetch All location"
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
-def create_location(user: user_dependency, db: db_dependency, location_request: CreateLocation):
+def create_location(db: db_dependency, location_request: CreateLocation):
     try:
 
         # if user is None:

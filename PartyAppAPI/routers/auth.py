@@ -14,7 +14,6 @@ from jwt import PyJWTError
 import jwt
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-import logging
 
 from database import SessionLocal, engine, get_db
 from models import Users, Base

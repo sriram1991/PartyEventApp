@@ -58,8 +58,7 @@ def get_all_theaters(db: db_dependency):
 
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
-def create_theater(user: user_dependency, db: db_dependency,
-                   theater_request: CreateTheater):
+def create_theater(db: db_dependency, theater_request: CreateTheater):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,

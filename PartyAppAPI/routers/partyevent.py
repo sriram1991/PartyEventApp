@@ -51,8 +51,7 @@ def get_all_party_event(db: db_dependency):
         return "error in fetch All PartyEvents "
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
-def create_party_event(user: user_dependency, db: db_dependency,
-                       event_request: CreatePartyEvent):
+def create_party_event(db: db_dependency, event_request: CreatePartyEvent):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,

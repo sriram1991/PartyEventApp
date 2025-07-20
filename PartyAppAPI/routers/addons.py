@@ -54,7 +54,7 @@ def get_all_addons(db: db_dependency):
         return "error in fetch All Addon"
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
-def create_addon(user: user_dependency, db: db_dependency, addon_request: CreateAddon):
+def create_addon(db: db_dependency, addon_request: CreateAddon):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
