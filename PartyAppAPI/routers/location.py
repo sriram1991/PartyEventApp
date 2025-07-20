@@ -108,7 +108,8 @@ async def update_location(db: db_dependency, location_request: CreateLocation,
         location = db.query(Location).filter(Location.id == location_id).first()
         logger.info(location)
         if location is None:
-            return logger.error(f"Selected id is invalid data or no match found in DB for Location {location_id}")
+            logger.error(f"Selected id is invalid data or no match found in DB for Location {location_id}")
+            return f"Selected id is invalid data or no match found in DB for Location {location_id}"
 
         location.name = location_request.name
         location.description = location_request.description

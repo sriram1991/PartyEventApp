@@ -115,7 +115,8 @@ def get_gallery_by_location_by_theater_by_eventType(db: db_dependency, location_
         logger.info(f"galleryList by Location: {location_id} - Theater: {theater_id} - list:  {galleryList}")
 
         if galleryList is None:
-            return logger.error(f"Selected id is invalid or no match found in DB for Theater Id: {theater_id} and Location Id: {location_id}")
+            logger.error(f"Selected id is invalid or no match found in DB for Theater Id: {theater_id} and Location Id: {location_id}")
+            return f"Selected id is invalid or no match found in DB for Theater Id: {theater_id} and Location Id: {location_id}"
         return galleryList
     except Exception as e:
         logger.error("error in fetch Gallery ", exc_info=e)
@@ -132,7 +133,8 @@ def get_gallery(db: db_dependency):
         logger.info(f"galleryList -- {galleryList}")
 
         if galleryList is None:
-            return logger.error("No Data found in Gallery")
+            logger.error("No Data found in Gallery")
+            return "No Data found in Gallery"
 
         return galleryList
     except Exception as e:
@@ -162,8 +164,9 @@ def get_gallery(db: db_dependency, gallery_id: int):
         gallery = db.query(Gallery).filter(Gallery.id == gallery_id).first()
         logger.info(gallery)
         if gallery is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate user.')
+            logger.error(f"Selected id is invalid data or no match found in DB for {gallery_id}")
+            # raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+            #                     detail='Could not validate user.')
         return gallery
     except Exception as e:
         logger.error("error in fetch Gallery ", exc_info=e)
@@ -178,7 +181,8 @@ async def update_gallery(db: db_dependency, gallery_request: CreateGallery, gall
         gallery = db.query(Gallery).filter(Gallery.id == gallery_id).first()
         logger.info(gallery.name)
         if gallery is None:
-            return logger.error(f"Selected Gallery_id is invalid data or no match found in DB for {gallery_id}")
+            logger.error(f"Selected Gallery_id is invalid data or no match found in DB for {gallery_id}")
+            return f"Selected Gallery_id is invalid data or no match found in DB for {gallery_id}"
 
         gallery.name = gallery_request.name
         gallery.location = gallery_request.location
@@ -201,7 +205,8 @@ async def delete_gallery(db: db_dependency, gallery_id: int = Path(gt=0)):
         #                         detail='Could not validate user.')
         gallery = db.query(Gallery).filter(Gallery.id == gallery_id).first()
         if gallery is None:
-            return logger.error(f"No match found in DB for id: {gallery_id}")
+            logger.error(f"No match found in DB for id: {gallery_id}")
+            return f"No match found in DB for id: {gallery_id}"
         else:
             # delete gallery_id
             print(gallery)

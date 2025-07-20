@@ -76,11 +76,14 @@ def get_all_event_bookings(db: db_dependency):
 
         logger.info(f"bookingList - {bookingList}")
         if bookingList is None:
-            return logger.error("No Data found in Booking")
+            logger.error("No Data found in Booking")
+            return "No Data found in Booking"
 
         return bookingList
     except Exception as e:
         logger.error("error in fetch All booking events ", exc_info=e)
+        return "error in fetch All booking events"
+
 
 @router.get("/getAll")
 def get_all_booking(db: db_dependency):
@@ -96,10 +99,12 @@ async def get_booking_by_id(db: db_dependency, booking_id: int = Path(gt=0)):
         bookings = db.query(BookingEntry).filter(BookingEntry.id == booking_id).first()
         logger.info(bookings)
         if bookings is None:
-            return logger.error(f"Selected booking_id is invalid data or no match found in DB for {booking_id}")
+            logger.error(f"Selected booking_id is invalid data or no match found in DB for {booking_id}")
+            return f"Selected booking_id is invalid data or no match found in DB for {booking_id}"
         return bookings
     except Exception as e:
         logger.error(f"error getting booking_id {booking_id} ", exc_info=e)
+        return f"error getting booking_id {booking_id}"
 
 
 @router.put("/grant")
@@ -110,13 +115,15 @@ async def grant_booking(db: db_dependency, booking_id: int = Path(gt=0)):
         #                         detail='Could not validate user.')
         bookings = db.query(BookingEntry).filter(BookingEntry.id == booking_id).first()
         if bookings is None:
-            return logger.error(f"Selected booking_id is invalid data or no match found in DB for {booking_id}")
+            logger.error(f"Selected booking_id is invalid data or no match found in DB for {booking_id}")
+            return f"Selected booking_id is invalid data or no match found in DB for {booking_id}"
         bookings.is_granted = True
         db.add(bookings)
         db.commit()
         return bookings
     except Exception as e:
         logger.error(f"error in granting booking_id {booking_id} ", exc_info=e)
+        return f"error in granting booking_id {booking_id} "
 
 
 @router.put("/disable/{booking_id}")

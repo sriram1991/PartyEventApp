@@ -45,7 +45,8 @@ def get_all_addons(db: db_dependency):
         logger.info(f"addonList - {addonList}")
 
         if addonList is None:
-            return logger.error(f"No data found in AddOn.")
+            logger.error(f"No data found in AddOn.")
+            return f"No data found in AddOn."
 
         return addonList
     except Exception as e:
@@ -123,7 +124,8 @@ async def delete_addon(db: db_dependency, addon_id: int = Path(gt=0)):
         #                         detail='Could not validate user.')
         addon = db.query(AddOns).filter(AddOns.id == addon_id).first()
         if addon is None:
-            return logger.error(f"Selected addon_id is invalid data or no match found in DB for {addon_id} to delete")
+            logger.error(f"Selected addon_id is invalid data or no match found in DB for {addon_id} to delete")
+            return f"Selected addon_id is invalid data or no match found in DB for {addon_id} to delete"
 
         db.delete(addon)
         db.commit()

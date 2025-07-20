@@ -48,7 +48,8 @@ def get_all_theaters(db: db_dependency):
         logger.info(theaterList)
 
         if theaterList is None:
-            return logger.error("No Theater's found ")
+            logger.error("No Theater's found ")
+            return "No Theater's found "
 
         return theaterList
     except Exception as e:
@@ -88,7 +89,8 @@ def get_theater(db: db_dependency, theater_id: int = Path(gt=0)):
         theater = db.query(Theater).filter(Theater.id == theater_id).first()
         logger.info(theater)
         if theater is None:
-            return logger.error(f"Selected id is invalid data or no match found in DB for {theater_id}")
+            logger.error(f"Selected id is invalid data or no match found in DB for {theater_id}")
+            return f"Selected id is invalid data or no match found in DB for {theater_id}"
         return theater
     except Exception as e:
         logger.error("error in fetch All Theaters ", exc_info=e)
@@ -104,7 +106,8 @@ async def update_theater(db: db_dependency,
         theater = db.query(Theater).filter(Theater.id == theater_id).first()
 
         if theater is None:
-            return logger.error(f"Selected id is invalid data or no match found in DB for {theater_id}")
+            logger.error(f"Selected id is invalid data or no match found in DB for {theater_id}")
+            return f"Selected id is invalid data or no match found in DB for {theater_id}"
 
         theater.name = theater_request.name
         theater.description = theater_request.description
@@ -132,8 +135,8 @@ async def disable_theater(db: db_dependency,
         theater = db.query(Theater).filter(Theater.id == theater_id).first()
         print(theater.id)
         if theater is None:
-            print("No theater found...")
-            return logger.error(f"No match found in DB for id: {theater_id}")
+            logger.error(f"No match found in DB for id: {theater_id}")
+            return f"No match found in DB for id: {theater_id}"
         else:
             # disableing Theater
             theater.is_active = 0

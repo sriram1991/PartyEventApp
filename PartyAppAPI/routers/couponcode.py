@@ -43,12 +43,13 @@ def get_all_coupon(db: db_dependency):
         couponList = db.query(CouponCode).all()
 
         if couponList is None:
-            return logger.error("No Data found in coupon")
             logger.info(f"couponList -- {couponList}")
+            return "No Data found in coupon"
 
         return couponList
     except Exception as e:
         logger.error("error in fetch All Co ", exc_info=e)
+        return "error in fetch coupon list "
 
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
@@ -84,7 +85,8 @@ def get_coupon(db: db_dependency, coupon_id: int = Path(gt=0)):
         coupon = db.query(CouponCode).filter(CouponCode.id == coupon_id).first()
         logger.info(coupon)
         if coupon is None:
-            return logger.error(f"Selected id is invalid data or no match found in DB for {coupon_id}")
+            logger.error(f"Selected id is invalid data or no match found in DB for {coupon_id}")
+            return f"Selected id is invalid data or no match found in DB for {coupon_id}"
         return coupon
     except Exception as e:
         logger.error("error in fetch All Theaters ", exc_info=e)
@@ -100,7 +102,8 @@ async def update_coupon(db: db_dependency,
         coupon = db.query(CouponCode).filter(CouponCode.id == coupon_id).first()
 
         if coupon is None:
-            return logger.error(f"Selected id is invalid data or no match found in DB for {coupon_id}")
+            logger.error(f"Selected id is invalid data or no match found in DB for {coupon_id}")
+            return f"Selected id is invalid data or no match found in DB for {coupon_id}"
 
         coupon.name = coupon_request.name
         coupon.uniqu_code = coupon_request.uniqu_code
@@ -123,15 +126,14 @@ def delete_coupon(db: db_dependency, coupon_id: int = Path(gt=0)):
         #                         detail='Could not validate user.')
         coupon = db.query(CouponCode).filter(CouponCode.id == coupon_id).first()
         if coupon is None:
-            print("No coupon found...")
-            return logger.error(f"No match found in DB for id: {coupon_id}")
+            logger.error(f"No match found in DB for id: {coupon_id}")
+            return f"No match found in DB for id: {coupon_id}"
         else:
             print(coupon.id)
             # delete coupon_id
             db.delete(coupon)
             db.commit()
-            print("coupon")
-            print(coupon)
+            logger.info(f"coupon {coupon_id} deleted success..")
             return f"coupon {coupon_id} deleted success.."
     except Exception as e:
         logger.error(f"error in deleting event {coupon_id} in DB ", exc_info=e)

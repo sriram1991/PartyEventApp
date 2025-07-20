@@ -161,6 +161,7 @@ def get_user(user: get_current_user, db: db_dependency, user_id: int = Path(gt=0
         return db_user
     except Exception as e:
         logger.error(f"error in updating user {user_id} - ", exc_info=e)
+        return f"error in updating user {user_id} - "
 
 @router.delete("/deleteUser/{user_id}")
 def delete_user(user: get_current_user, db: db_dependency, user_id: int = Path(gt=0)):
@@ -170,7 +171,8 @@ def delete_user(user: get_current_user, db: db_dependency, user_id: int = Path(g
                                 detail='Could not validate user.')
         db_user = db.query(Users).filter(user.username == user_id).first()
         if db_user is None:
-            return logger.error(f"No match found in DB for id: {user_id}")
+            logger.error(f"No match found in DB for id: {user_id}")
+            return f"No match found in DB for id: {user_id}"
         else:
             db.delete(db_user)
             db.commit()

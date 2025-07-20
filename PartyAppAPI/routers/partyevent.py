@@ -42,11 +42,13 @@ def get_all_party_event(db: db_dependency):
         logger.info(f" eventList - {eventList}")
 
         if eventList is None:
-            return logger.error("No Data found in Party Event")
+            logger.error("No Data found in Party Event")
+            return "No Data found in Party Event"
 
         return eventList
     except Exception as e:
         logger.error("error in fetch All PartyEvents ", exc_info=e)
+        return "error in fetch All PartyEvents "
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 def create_party_event(user: user_dependency, db: db_dependency,
@@ -76,7 +78,8 @@ async def get_party_event(db: db_dependency, event_id: int):
         logger.info(f"event - {event}")
 
         if event is None:
-            return logger.error(f"Selected event_id is invalid data or no match found in DB for {event_id}")
+            logger.error(f"Selected event_id is invalid data or no match found in DB for {event_id}")
+            return f"Selected event_id is invalid data or no match found in DB for {event_id}"
 
         return event
     except Exception as e:
@@ -99,7 +102,8 @@ async def update_event(db: db_dependency,
         event = db.query(PartyEvent).filter(PartyEvent.id == event_id).first()
 
         if event is None:
-            return logger.error(f"Selected event_id is invalid data or no match found in DB for {event_id}")
+            logger.error(f"Selected event_id is invalid data or no match found in DB for {event_id}")
+            return f"Selected event_id is invalid data or no match found in DB for {event_id}"
 
         event.name = event_request.name
         event.description = event_request.description
@@ -123,7 +127,8 @@ async def delete_event(db: db_dependency, event_id: int):
         event = db.query(PartyEvent).filter(PartyEvent.id == event_id).first()
 
         if event is None:
-            return logger.error(f"No match found in DB for id: {event_id}")
+            logger.error(f"No match found in DB for id: {event_id}")
+            return f"No match found in DB for id: {event_id}"
         else:
             # delete event_id
             print(event)
