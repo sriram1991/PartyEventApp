@@ -53,6 +53,7 @@ def get_all_theaters(db: db_dependency):
         return theaterList
     except Exception as e:
         logger.error("error in fetch All Theaters ", exc_info=e)
+        return "Error in fetch All Theaters"
 
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
@@ -91,6 +92,7 @@ def get_theater(db: db_dependency, theater_id: int = Path(gt=0)):
         return theater
     except Exception as e:
         logger.error("error in fetch All Theaters ", exc_info=e)
+        return "error in fetch All Theaters"
 
 @router.put("/update/{theater_id}")
 async def update_theater(db: db_dependency,

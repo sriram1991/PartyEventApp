@@ -127,14 +127,16 @@ async def delete_booking(db: db_dependency, booking_id: int = Path(gt=0)):
         #                         detail='Could not validate user.')
         bookings = db.query(BookingEntry).filter(BookingEntry.id == booking_id).first()
         if bookings is None:
-            print("No theater found...")
-            return logger.error(f"No match found in DB for id: {booking_id}")
+            logger.error(f"No match found in DB for id: {booking_id}")
+            return f"No match found in DB for id: {booking_id}"
         else:
             bookings.is_active = 0
             db.add(bookings)
             db.commit()
+            logger.error(f"Booking in DB for id: {bookings.is_active}")
             return f"Booking id {booking_id} disabled success.."
             # db.query(BookingEntry).filter(BookingEntry.id == booking_id).delete()
     except Exception as e:
         logger.error(f"error in deleting Booking id {booking_id} ", exc_info=e)
+        return f"error in deleting Booking id {booking_id} "
 

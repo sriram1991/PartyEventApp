@@ -119,6 +119,8 @@ def get_gallery_by_location_by_theater_by_eventType(db: db_dependency, location_
         return galleryList
     except Exception as e:
         logger.error("error in fetch Gallery ", exc_info=e)
+        return "error in fetch Gallery"
+
 
 @router.get("/getAll")
 def get_gallery(db: db_dependency):
@@ -135,6 +137,7 @@ def get_gallery(db: db_dependency):
         return galleryList
     except Exception as e:
         logger.error("error in fetch All Gallery Images ", exc_info=e)
+        return "Error in fetch All Gallery Images"
 
 
 # @router.post("/uploadFile")
@@ -164,6 +167,7 @@ def get_gallery(db: db_dependency, gallery_id: int):
         return gallery
     except Exception as e:
         logger.error("error in fetch Gallery ", exc_info=e)
+        return "Error in fetch Gallery"
 
 @router.put("/update/{gallery_id}")
 async def update_gallery(db: db_dependency, gallery_request: CreateGallery, gallery_id: int):

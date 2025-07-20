@@ -81,6 +81,8 @@ async def get_party_event(db: db_dependency, event_id: int):
         return event
     except Exception as e:
         logger.error(f"error in fetching event of {event_id} event id ", exc_info=e)
+        return "error in fetching event of {event_id} event id "
+
 
 @router.get("/getAll")
 def get_party_event(db: db_dependency):

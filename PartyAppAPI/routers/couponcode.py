@@ -88,6 +88,7 @@ def get_coupon(db: db_dependency, coupon_id: int = Path(gt=0)):
         return coupon
     except Exception as e:
         logger.error("error in fetch All Theaters ", exc_info=e)
+        return "Error in fetch All Theaters"
 
 @router.put("/update/{coupon_id}")
 async def update_coupon(db: db_dependency,

@@ -54,6 +54,7 @@ def getAllLocation(db: db_dependency):
         return location
     except Exception as e:
         logger.error("error in fetch All location", exc_info=e)
+        return "error in fetch All location"
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 def create_location(user: user_dependency, db: db_dependency, location_request: CreateLocation):
@@ -88,11 +89,14 @@ def get_location(db: db_dependency, location_id: int):
         location = db.query(Location).filter(Location.id == location_id).first()
         logger.info(location)
         if location is None:
-            return logger.error(f"Selected id is invalid data or no match found in DB for location: {location_id}")
+            logger.error(f"Selected id is invalid data or no match found in DB for location: {location_id}")
+            return f"Selected id is invalid data or no match found in DB for location: {location_id}"
 
         return location
     except Exception as e:
         logger.error("error in fetch location", exc_info=e)
+        return "Error in fetch location"
+
 
 @router.put("/update/{location_id}")
 async def update_location(db: db_dependency, location_request: CreateLocation,

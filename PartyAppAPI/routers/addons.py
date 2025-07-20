@@ -50,6 +50,7 @@ def get_all_addons(db: db_dependency):
         return addonList
     except Exception as e:
         logger.error("error in fetch All AddOns ", exc_info=e)
+        return "error in fetch All Addon"
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 def create_addon(user: user_dependency, db: db_dependency, addon_request: CreateAddon):
@@ -79,11 +80,13 @@ async def get_addons(db: db_dependency, addon_id: int = Path(gt=0)):
         addon = db.query(AddOns).filter(AddOns.id == addon_id).first()
         logger.info(f"addon- {addon}")
         if addon is None:
-            return logger.error(f"Selected addon_id is invalid data or no match found in DB for {addon_id}")
+            logger.error(f"Selected addon_id is invalid data or no match found in DB for {addon_id}")
+            return f"Selected addon_id is invalid data or no match found in DB for {addon_id}"
 
         return addon
     except Exception as e:
         logger.error(f"error in fetch addon {addon_id} - ", exc_info=e)
+        return f"error in fetch addon {addon_id} "
 
 @router.put("/update/{addon_id}")
 async def update_addons(db: db_dependency,
@@ -94,7 +97,8 @@ async def update_addons(db: db_dependency,
         #                         detail='Could not validate user.')
         addon = db.query(AddOns).filter(AddOns.id == addon_id).first()
         if addon is None:
-            return logger.error(f"Selected Gallery_id is invalid data or no match found in DB for {addon_id} to update")
+            logger.error(f"Selected Gallery_id is invalid data or no match found in DB for {addon_id} to update")
+            return f"Selected Gallery_id is invalid data or no match found in DB for {addon_id} to update"
 
         addon.name = addon_request.name
         addon.description = addon_request.description

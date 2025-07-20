@@ -50,6 +50,7 @@ def get_all_slots(db: db_dependency):
         return slots
     except Exception as e:
         logger.error(f"error in getting AllSlots - ", exc_info=e)
+        return "error in getting all List"
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 def create_slots(db: db_dependency, slots_request: CreateSlots):
@@ -82,6 +83,7 @@ async def get_slot(db: db_dependency, slot_id: int = Path(gt=0)):
         return slot
     except Exception as e:
         logger.error(f"error in getting slot id {slot_id} - ", exc_info=e)
+        return f"error in getting slot id {slot_id} "
 
 @router.put("/update/{slot_id}")
 async def update_slots(db: db_dependency, slots_request: CreateSlots, slot_id: int = Path(gt=0)):
