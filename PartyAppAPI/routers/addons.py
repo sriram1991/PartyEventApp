@@ -58,7 +58,7 @@ def get_all_addons(db: db_dependency):
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 def create_addon(db: Session = Depends(get_db), name :str = Form(), description: str = Form(),
-                 type: str = Form(), price: int = Form(), image_path: str = Form(),
+                 type: str = Form(), price: int = Form(),
                  is_available: bool = Form(), image_file: UploadFile = File(...)):
     try:
         # if user is None:
