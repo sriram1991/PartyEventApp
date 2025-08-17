@@ -65,10 +65,10 @@ class AddOns(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String(25))
     description = Column(String(100), nullable=True)
-    type = Column(String(25))
-    price = Column(Integer)
+    type = Column(String(25), nullable=True)
+    price = Column(Integer, default=1000)
     image_path = Column(String(100), nullable=True)
-    is_available = Column(Boolean)
+    is_available = Column(Boolean, default=False)
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
 
 
