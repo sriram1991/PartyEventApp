@@ -65,18 +65,16 @@ def create_addon(db: Session = Depends(get_db), name :str = Form(), description:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
         # addon_model = AddOns(**addon_request.dict())
-        logger.info(f"image_file:: {image_file}")
+        logger.info(f"image_file read:: {image_file}")
         if image_file:
             filename = image_file.filename
-            logger.info(filename)
-            print(image_file)
-            print(image_file.filename)
+            logger.info(f'image_file before : {image_file}')
             image_path = os.path.join(UPLOAD_DIR, filename)
             with open(image_path, "wb") as f:
                 f.write(image_file.file.read())
         else:
             image_path = None
-            logger.info(image_file)
+            logger.info(f'image_file else: {image_file}')
 
         addon = models.AddOns(
             name=name,
