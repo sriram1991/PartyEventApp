@@ -59,22 +59,28 @@ def get_all_addons(db: db_dependency):
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 def create_addon(db: Session = Depends(get_db), name :str = Form(), description: str = Form(),
                  type: str = Form(), price: int = Form(),
-                 is_available: bool = Form(), image_file: UploadFile = File(...)):
+                 is_available: bool = Form(), image_file: UploadFile = File(None)):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
         # addon_model = AddOns(**addon_request.dict())
         logger.info(f"image_file read:: {image_file}")
-        if image_file:
+        if image_file and image_file.filename:
+            file_content = image_file.file.read()
+            if len(file_content) > 1024 * 1024:  # 1MB
+                logger.error(f'File size {len(file_content)} bytes exceeds 1MB limit')
+                raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                                  detail='Image size must be less than 1MB')
             filename = image_file.filename
-            logger.info(f'image_file before : {image_file}')
+            logger.info(f'Processing image file: {filename}')
             image_path = os.path.join(UPLOAD_DIR, filename)
             with open(image_path, "wb") as f:
-                f.write(image_file.file.read())
+                f.write(file_content)
+            logger.info(f'Image saved to: {image_path}')
         else:
             image_path = None
-            logger.info(f'image_file else: {image_file}')
+            logger.info('No image file provided or filename is empty')
 
         addon = models.AddOns(
             name=name,
@@ -116,8 +122,10 @@ async def get_addons(db: db_dependency, addon_id: int = Path(gt=0)):
         return f"error in fetch addon {addon_id} "
 
 @router.put("/update/{addon_id}")
-async def update_addons(db: db_dependency,
-                       addon_request: CreateAddon, addon_id: int = Path(gt=0)):
+async def update_addons(db: db_dependency, addon_id: int = Path(gt=0),
+                       name: str = Form(), description: str = Form(),
+                       type: str = Form(), price: int = Form(),
+                       is_available: bool = Form(), image_file: UploadFile = File(None)):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
@@ -127,12 +135,25 @@ async def update_addons(db: db_dependency,
             logger.error(f"Selected Gallery_id is invalid data or no match found in DB for {addon_id} to update")
             return f"Selected Gallery_id is invalid data or no match found in DB for {addon_id} to update"
 
-        addon.name = addon_request.name
-        addon.description = addon_request.description
-        addon.type = addon_request.type
-        addon.price = addon_request.price
-        addon.image_path = addon_request.image_path
-        addon.is_available = addon_request.is_available
+        if image_file and image_file.filename:
+            file_content = image_file.file.read()
+            if len(file_content) > 1024 * 1024:  # 1MB
+                logger.error(f'File size {len(file_content)} bytes exceeds 1MB limit')
+                raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                                  detail='Image size must be less than 1MB')
+            filename = image_file.filename
+            logger.info(f'Processing image file: {filename}')
+            image_path = os.path.join(UPLOAD_DIR, filename)
+            with open(image_path, "wb") as f:
+                f.write(file_content)
+            addon.image_path = image_path
+            logger.info(f'Image saved to: {image_path}')
+
+        addon.name = name
+        addon.description = description
+        addon.type = type
+        addon.price = price
+        addon.is_available = is_available
 
         db.add(addon)
         db.commit()

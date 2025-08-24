@@ -51,16 +51,24 @@ theater_dependency = Annotated[dict, Depends(get_all_theaters)]
 @router.post("/createGallery", status_code=status.HTTP_201_CREATED)
 async def saveDataToDB(db: Session = Depends(get_db), name :str = Form(), location: int = Form(),
                        theater: int = Form(), event_type: int= Form() ,description: str = Form(),
-                       image: UploadFile = File(...)):
+                       image: UploadFile = File(None)):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
-        filename = image.filename
-        logger.info(filename)
-        image_path = os.path.join(UPLOAD_DIR, filename)
-        with open(image_path, "wb") as f:
-            f.write(image.file.read())
+        if image and image.filename:
+            file_content = image.file.read()
+            if len(file_content) > 1024 * 1024:  # 1MB
+                raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                                  detail='Image size must be less than 1MB')
+            filename = image.filename
+            logger.info(filename)
+            image_path = os.path.join(UPLOAD_DIR, filename)
+            with open(image_path, "wb") as f:
+                f.write(file_content)
+        else:
+            image_path = None
+            logger.info('No image file provided')
 
         logger.info(name)
         logger.info(location)
@@ -101,27 +109,21 @@ async def saveDataToDB(db: Session = Depends(get_db), name :str = Form(), locati
 #         logger.error("error in Uploading Image ", exc_info=e)
 #
 @router.get("/galleryByLocationByTheaterByEventType/{location_id}/{theater_id}/{event_type}")
-def get_gallery_by_location_by_theater_by_eventType(db: db_dependency, location_id: Optional[int] = None,
-                                                    theater_id: Optional[int] = None, event_type: Optional[int] = None):
+def get_gallery_by_location_by_theater_by_eventType(db: db_dependency, location_id: int, theater_id: int, event_type: int):
     try:
-        # if user is None:
-        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-        #                         detail='Could not validate user.')
-        logger.info(Gallery.location)
-        logger.info(Gallery.theater)
+        galleryList = db.query(Gallery).filter(
+            Gallery.location == location_id,
+            Gallery.theater == theater_id, 
+            Gallery.event_type == event_type
+        ).all()
 
-        galleryList = db.query(Gallery).filter(Gallery.location == location_id,
-            Gallery.theater == theater_id, Gallery.event_type == event_type).all()
-
-        logger.info(f"galleryList by Location: {location_id} - Theater: {theater_id} - list:  {galleryList}")
-
-        if galleryList is None:
-            logger.error(f"Selected id is invalid or no match found in DB for Theater Id: {theater_id} and Location Id: {location_id}")
-            return f"Selected id is invalid or no match found in DB for Theater Id: {theater_id} and Location Id: {location_id}"
+        if not galleryList:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                              detail=f"No gallery found for location {location_id}, theater {theater_id}, event {event_type}")
         return galleryList
     except Exception as e:
         logger.error("error in fetch Gallery ", exc_info=e)
-        return "error in fetch Gallery"
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error fetching gallery")
 
 
 @router.get("/getAll")
@@ -174,21 +176,40 @@ def get_gallery(db: db_dependency, gallery_id: int):
         return "Error in fetch Gallery"
 
 @router.put("/update/{gallery_id}")
-async def update_gallery(db: db_dependency, gallery_request: CreateGallery, gallery_id: int):
+async def update_gallery(db: db_dependency, gallery_id: int = Path(gt=0),
+                        name: str = Form(), location: int = Form(),
+                        theater: int = Form(), event_type: int = Form(),
+                        description: str = Form(), image_file: UploadFile = File(None)):
     try:
         # if user is None:
         #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
         #                         detail='Could not validate user.')
+
         gallery = db.query(Gallery).filter(Gallery.id == gallery_id).first()
-        logger.info(gallery.name)
         if gallery is None:
             logger.error(f"Selected Gallery_id is invalid data or no match found in DB for {gallery_id}")
             return f"Selected Gallery_id is invalid data or no match found in DB for {gallery_id}"
 
-        gallery.name = gallery_request.name
-        gallery.location = gallery_request.location
-        gallery.theater = gallery_request.theater
-        gallery.description = gallery_request.description
+        if image_file and image_file.filename:
+            file_content = image_file.file.read()
+            if len(file_content) > 1024 * 1024:  # 1MB
+                raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                                  detail='Image size must be less than 1MB')
+            filename = image_file.filename
+            logger.info(f'Processing image file: {filename}')
+            image_path = os.path.join(UPLOAD_DIR, filename)
+            with open(image_path, "wb") as f:
+                f.write(file_content)
+            gallery.image_path = image_path
+            logger.info(f'Image saved to: {image_path}')
+        else:
+            logger.info('No image file provided or filename is empty')
+
+        gallery.name = name
+        gallery.location = location
+        gallery.theater = theater
+        gallery.event_type = event_type
+        gallery.description = description
 
         db.add(gallery)
         db.commit()
